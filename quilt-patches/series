@@ -1,0 +1,5 @@
+backports/fix-make40-build.diff
+tune/default-gc.diff
+tuxjdk/add-fontconfig-support.diff
+tuxjdk/fix-typographical-point-size.diff
+tuxjdk/lcd-hrgb-by-default.diff

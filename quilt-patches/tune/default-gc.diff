@@ -1,0 +1,16 @@
+Index: jdk8u-tuxjdk/hotspot/src/share/vm/runtime/arguments.cpp
+===================================================================
+--- jdk8u-tuxjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp
++++ jdk8u-tuxjdk/hotspot/src/share/vm/runtime/arguments.cpp
+@@ -1520,11 +1520,7 @@ void Arguments::set_ergonomics_flags() {
+         !UseG1GC &&
+         !UseParNewGC &&
+         FLAG_IS_DEFAULT(UseParallelGC)) {
+-      if (should_auto_select_low_pause_collector()) {
+         FLAG_SET_ERGO(bool, UseConcMarkSweepGC, true);
+-      } else {
+-        FLAG_SET_ERGO(bool, UseParallelGC, true);
+-      }
+     }
+   }
+ #ifdef COMPILER2
