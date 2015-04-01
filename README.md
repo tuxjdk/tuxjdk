@@ -14,7 +14,7 @@ To build tuxjdk, do the following steps:
 # clone tuxjdk:
 git clone 'https://github.com/TheIndifferent/tuxjdk.git'
 # clone openjdk:
-hg clone http://hg.openjdk.java.net/jdk8/jdk8 jdk8-tuxjdk
+hg clone 'http://hg.openjdk.java.net/jdk8u/jdk8u' jdk8-tuxjdk
 cd jdk8-tuxjdk
 bash get_source.sh
 # run helper script to apply tuxjdk onto openjdk sources:
@@ -32,3 +32,6 @@ ls images/j2re-image
 ```
 
 # Patches list
+```
+TODO
+```

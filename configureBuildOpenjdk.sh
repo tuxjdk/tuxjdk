@@ -13,7 +13,17 @@ unset JDK_HOME
 unset JRE_HOME
 unset _JAVA_OPTIONS
 
-COMMAND="$1/configure --with-zlib=system --disable-debug-symbols --disable-zip-debug-info --with-debug-level=release --with-milestone="fcs" --with-update-version=25 --with-user-release-suffix=tuxjdk --with-build-number=$3 --with-boot-jdk=$2"
+COMMAND="$1/configure \
+--with-zlib=system \
+--disable-debug-symbols \
+--disable-zip-debug-info \
+--with-debug-level=release \
+--with-milestone='fcs' \
+--with-update-version=25 \
+--with-user-release-suffix=tuxjdk \
+--with-build-number=$3 \
+--with-boot-jdk=$2"
+
 echo "running $COMMAND..."
 echo ""
 bash $COMMAND
