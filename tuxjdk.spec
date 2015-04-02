@@ -8,17 +8,12 @@ Summary:        Enhanced Open Java Development Kit for Linux developers
 License:        GNU General Public License, version 2, with the Classpath Exception
 Group:          Development/Languages
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
+BuildRequires:  bash
 BuildRequires:  make
 BuildRequires:  gcc
 BuildRequires:  gcc-c++
 BuildRequires:  autoconf
 BuildRequires:  automake
-BuildRequires:  gawk
-BuildRequires:  grep
-BuildRequires:  findutils
-BuildRequires:  which
-BuildRequires:  procps
-BuildRequires:  unzip
 BuildRequires:  freetype2-devel
 BuildRequires:  fontconfig-devel
 BuildRequires:  alsa-devel
@@ -33,7 +28,7 @@ BuildRequires:  libXinerama-devel
 BuildRequires:  libXt-devel
 BuildRequires:  libXtst-devel
 BuildRequires:  java-devel
-BuildRequires:  mercurial
+Source0:        %{hgtag}.tar.xz
 
 %description
 Enhanced Open Java Development Kit for Linux developers. Contains series of
@@ -41,10 +36,7 @@ patched to OpenJDK to enhance user experience with Java-based and Swing-based
 tools (NetBeans, Idea, Android Studio, etc).
 
 %prep
-hg clone http://hg.openjdk.java.net/jdk8u/jdk8u/
-cd jdk8u
-bash get_source.sh
-bash ./common/bin/hgforest.sh checkout %{hgtag}
+%setup
 
 %build
 ( cd common/autoconf && bash ./autogen.sh )
