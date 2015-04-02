@@ -1,7 +1,7 @@
-Index: jdk8u-tuxjdk/jdk/src/share/classes/sun/font/FreetypeFontScaler.java
+Index: jdk8u40-b25/jdk/src/share/classes/sun/font/FreetypeFontScaler.java
 ===================================================================
---- jdk8u-tuxjdk.orig/jdk/src/share/classes/sun/font/FreetypeFontScaler.java
-+++ jdk8u-tuxjdk/jdk/src/share/classes/sun/font/FreetypeFontScaler.java
+--- jdk8u40-b25.orig/jdk/src/share/classes/sun/font/FreetypeFontScaler.java
++++ jdk8u40-b25/jdk/src/share/classes/sun/font/FreetypeFontScaler.java
 @@ -24,12 +24,12 @@
   */
  
@@ -42,10 +42,10 @@ Index: jdk8u-tuxjdk/jdk/src/share/classes/sun/font/FreetypeFontScaler.java
  
      /* Freetype scaler context does not contain any pointers that
         has to be invalidated if native scaler is bad */
-Index: jdk8u-tuxjdk/jdk/src/share/native/sun/font/freetypeScaler.c
+Index: jdk8u40-b25/jdk/src/share/native/sun/font/freetypeScaler.c
 ===================================================================
---- jdk8u-tuxjdk.orig/jdk/src/share/native/sun/font/freetypeScaler.c
-+++ jdk8u-tuxjdk/jdk/src/share/native/sun/font/freetypeScaler.c
+--- jdk8u40-b25.orig/jdk/src/share/native/sun/font/freetypeScaler.c
++++ jdk8u40-b25/jdk/src/share/native/sun/font/freetypeScaler.c
 @@ -92,6 +92,8 @@ typedef struct FTScalerContext {
      int        renderFlags;   /* configuration specific to particular engine */
      int        pathType;
