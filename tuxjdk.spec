@@ -1,6 +1,6 @@
 %global hgtag   jdk8u40-b25
 %global update  40
-%global minor   0
+%global minor   00
 
 Name:           tuxjdk
 Version:        8.%{update}.%{minor}
@@ -73,6 +73,7 @@ make \
   VERBOSE=true \
   JAVAC_FLAGS=-g \
   HOTSPOT_VM_DISTRO=TuxJdk \
+  HOTSPOT_BUILD_VERSION=tuxjdk-%{minor} \
   images
 popd
 
@@ -82,9 +83,13 @@ cd build/images/j2sdk-image
 cp -R * %{buildroot}/opt/%{name}/
 
 %files
-%defattr(-,root,root)
+%defattr(644,root,root,755)
 /opt/%{name}
+%attr(755,root,root) /opt/%{name}/bin/*
+%attr(755,root,root) /opt/%{name}/jre/bin/*
 
 %changelog
+* Fri Apr  3 2015 baiduzhyi.devel@gmail.com
+- Working spec file based on tuxjdk 8.40.0.
 * Thu Apr  2 2015 baiduzhyi.devel@gmail.com
 - Initial attempt to build normal openJDK source code.
