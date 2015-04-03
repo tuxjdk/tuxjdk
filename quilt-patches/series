@@ -7,3 +7,4 @@ tune/full-srczip.diff
 tune/empty-ctsym.diff
 backport/langtools-fix-verbose-make.diff
 backport/opensuse-link-zlib-as-needed.diff
+backport/compare-pointer-with-literal.diff

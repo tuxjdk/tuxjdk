@@ -1,0 +1,13 @@
+Index: jdk8u40-b25/jdk/src/solaris/native/sun/awt/awt_Font.c
+===================================================================
+--- jdk8u40-b25.orig/jdk/src/solaris/native/sun/awt/awt_Font.c
++++ jdk8u40-b25/jdk/src/solaris/native/sun/awt/awt_Font.c
+@@ -502,7 +502,7 @@ awtJNI_GetFontData(JNIEnv * env, jobject
+             jio_snprintf(fdata->flist[i].xlfd, strlen(nativename) + 10,
+                          nativename, size * 10);
+ 
+-            if (nativename != NULL && nativename != "")
++            if (nativename != NULL && !strcmp(nativename, ""))
+                 JNU_ReleaseStringPlatformChars(env, fontDescriptorName, (const char *) nativename);
+ 
+             /*
