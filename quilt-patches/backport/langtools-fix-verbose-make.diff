@@ -1,0 +1,13 @@
+Index: jdk8u40-b25/common/autoconf/spec.gmk.in
+===================================================================
+--- jdk8u40-b25.orig/common/autoconf/spec.gmk.in
++++ jdk8u40-b25/common/autoconf/spec.gmk.in
+@@ -56,7 +56,7 @@ MAKE:=@MAKE@
+ 
+ # Pass along the verbosity and log level settings.
+ ifeq (,$(findstring VERBOSE=,$(MAKE)))
+-  MAKE:=$(MAKE) $(VERBOSE) VERBOSE="$(VERBOSE)" LOG_LEVEL="$(LOG_LEVEL)"
++  MAKE:=$(MAKE) VERBOSE="$(VERBOSE)" LOG_LEVEL="$(LOG_LEVEL)"
+ endif
+ 
+ # No implicit variables or rules!

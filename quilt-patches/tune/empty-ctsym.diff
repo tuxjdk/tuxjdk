@@ -1,0 +1,32 @@
+Index: jdk8u40-b25/jdk/make/CreateJars.gmk
+===================================================================
+--- jdk8u40-b25.orig/jdk/make/CreateJars.gmk
++++ jdk8u40-b25/jdk/make/CreateJars.gmk
+@@ -545,26 +545,7 @@ EXCLUDE_PROPWARN_PKGS = com.sun.java.swi
+ EXPORTED_PRIVATE_PKGS = com.oracle.net \
+     com.oracle.nio
+ 
+-$(IMAGES_OUTPUTDIR)/symbols/_the.symbols: $(IMAGES_OUTPUTDIR)/lib/rt.jar
+-	$(RM) -r $(IMAGES_OUTPUTDIR)/symbols/META-INF/sym
+-	$(MKDIR) -p $(IMAGES_OUTPUTDIR)/symbols/META-INF/sym
+-	$(JAVA) $(NEW_JAVAC) \
+-	    -bootclasspath $(JDK_OUTPUTDIR)/classes \
+-	    -XDprocess.packages -proc:only \
+-	    -processor com.sun.tools.javac.sym.CreateSymbols \
+-	    -Acom.sun.tools.javac.sym.Jar=$(IMAGES_OUTPUTDIR)/lib/rt.jar \
+-	    -Acom.sun.tools.javac.sym.Dest=$(IMAGES_OUTPUTDIR)/symbols/META-INF/sym/rt.jar \
+-	    -Acom.sun.tools.javac.sym.Profiles=profile-rtjar-includes.txt \
+-	    $(CORE_PKGS) $(NON_CORE_PKGS) $(EXCLUDE_PROPWARN_PKGS) $(EXPORTED_PRIVATE_PKGS)
+-	$(TOUCH) $@
+-
+-$(eval $(call MakeDir, $(IMAGES_OUTPUTDIR)/symbols))
+-$(eval $(call SetupArchive,BUILD_CT_SYM, $(IMAGES_OUTPUTDIR)/symbols/_the.symbols, \
+-    SRCS := $(IMAGES_OUTPUTDIR)/symbols, \
+-    INCLUDES := META-INF/sym, \
+-    JAR := $(IMAGES_OUTPUTDIR)/lib/ct.sym, \
+-    CHECK_COMPRESS_JAR := true))
+-
++.PHONY: $(IMAGES_OUTPUTDIR)/lib/ct.sym
+ 
+ ##########################################################################################
+ 

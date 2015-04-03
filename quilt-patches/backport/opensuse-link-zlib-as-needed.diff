@@ -1,0 +1,25 @@
+Index: jdk8u40-b25/jdk/make/CompileLaunchers.gmk
+===================================================================
+--- jdk8u40-b25.orig/jdk/make/CompileLaunchers.gmk
++++ jdk8u40-b25/jdk/make/CompileLaunchers.gmk
+@@ -427,7 +427,7 @@ endif
+ # binary (at least on linux) which causes the size to differ between old and new build.
+ ifeq ($(USE_EXTERNAL_LIBZ), true)
+   UNPACKEXE_CFLAGS := -DSYSTEM_ZLIB
+-  UNPACKEXE_ZIPOBJS := -lz
++  UNPACKEXE_LIBS := -lz
+ else
+   UNPACKEXE_CFLAGS := -I$(JDK_TOPDIR)/src/share/native/java/util/zip/zlib-1.2.8
+   UNPACKEXE_ZIPOBJS := $(JDK_OUTPUTDIR)/objs/libzip/zcrc32$(OBJ_SUFFIX) \
+@@ -488,9 +488,9 @@ $(eval $(call SetupNativeCompilation,BUI
+     LDFLAGS_posix := $(LDFLAGS_JDKEXE) $(LDFLAGS_CXX_JDK) \
+         $(call SET_SHARED_LIBRARY_NAME,$(LIBRARY_PREFIX)unpack$(SHARED_LIBRARY_SUFFIX)) \
+         $(call SET_SHARED_LIBRARY_ORIGIN), \
+-    LDFLAGS_linux := -lc, \
++    LDFLAGS_linux := , \
+     LDFLAGS_solaris := $(UNPACKEXE_LDFLAGS_solaris) -lc, \
+-    LDFLAGS_SUFFIX := $(LIBCXX), \
++    LDFLAGS_SUFFIX := $(UNPACKEXE_LIBS) $(LIBCXX), \
+     OBJECT_DIR := $(JDK_OUTPUTDIR)/objs/unpackexe$(OUTPUT_SUBDIR), \
+     OUTPUT_DIR := $(JDK_OUTPUTDIR)/objs/unpackexe$(OUTPUT_SUBDIR), \
+     PROGRAM := unpack200, \

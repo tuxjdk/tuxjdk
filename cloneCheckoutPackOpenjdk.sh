@@ -30,7 +30,7 @@ if [[ -a "$NAME.tar.xz" ]] ; then
   exit 1
 fi
 
-echo -e '\e[0;35mCloning the source...\e[0m'
+echo -e "\e[0;35mCloning the source from '$UPSTREAM'...\e[0m"
 ( $HG clone "$UPSTREAM" "$NAME" && cd "$NAME" && bash 'get_source.sh' )
 
 if [[ -n $TAG ]] ; then
