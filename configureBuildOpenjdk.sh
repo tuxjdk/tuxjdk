@@ -25,6 +25,7 @@ unset _JAVA_OPTIONS
     --disable-debug-symbols \
     --disable-zip-debug-info \
     --with-debug-level=release \
+    --with-stdc++lib=dynamic \
     --with-milestone=$MILESTONE \
     --with-update-version=$UPDATE_VERSION \
     --with-user-release-suffix=$USER_SUFFIX \
