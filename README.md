@@ -28,7 +28,7 @@ mkdir build
 cd build
 # and run helper script to configure and make tuxjdk images,
 # script takes 3 arguments: openjdk source folder, bootstrap jdk and build number:
-../tuxjdk/configureBuildOpenjdk.sh ../jdk8-tuxjdk /opt/jdk1.7.0_51 b00
+../tuxjdk/configureBuildOpenjdk.sh /opt/jdk7
 # now wait until the build is complete, and go see the images:
 ls images/j2sdk-image
 ls images/j2re-image
