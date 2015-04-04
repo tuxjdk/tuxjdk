@@ -1,11 +1,8 @@
 This project contains series of patched to OpenJDK to enhance user experience with Java-based and Swing-based tools (NetBeans, Idea, Android Studio, etc)
 
-# WARNING
-The project is in the process of migrating from google-code, so some things may not work as intended.
-
 # Download
 Download latest build of tuxjdk for openSUSE here:
-[jdk-8u25-tuxjdk-b01.tar.xz](https://googledrive.com/host/0B68yuEpDuq6waUl5UjNTUWRlYTQ/jdk-8u25-tuxjdk-b01.tar.xz)
+[OBS repository](http://download.opensuse.org/repositories/home:/TheIndifferent:/tuxjdk/openSUSE_13.2/)
 
 # Quickstart (for packagers and developers)
 

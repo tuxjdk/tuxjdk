@@ -5,7 +5,7 @@
 Name:           tuxjdk
 Version:        8.%{update}.%{minor}
 Release:        0
-Summary:        Enhanced Open Java Development Kit for Linux developers
+Summary:        Enhanced Open Java Development Kit for developers on Linux
 License:        GNU General Public License, version 2, with the Classpath Exception
 Group:          Development/Languages
 BuildRequires:  bash
@@ -37,7 +37,7 @@ Source0:        %{name}-%{version}.tar.xz
 Source1:        %{hgtag}.tar.xz
 
 %description
-Enhanced Open Java Development Kit for Linux developers. Contains series of
+Enhanced Open Java Development Kit for developers on Linux. Contains series of
 patched to OpenJDK to enhance user experience with Java-based and Swing-based
 tools (NetBeans, Idea, Android Studio, etc).
 
@@ -70,7 +70,6 @@ bash ../%{hgtag}/configure \
 --with-stdc++lib=dynamic \
 --with-boot-jdk="$BOOT_JDK"
 make \
-  VERBOSE=true \
   JAVAC_FLAGS=-g \
   HOTSPOT_VM_DISTRO=TuxJdk \
   HOTSPOT_BUILD_VERSION=tuxjdk-%{minor} \
