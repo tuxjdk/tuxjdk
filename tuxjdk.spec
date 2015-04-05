@@ -2,6 +2,8 @@
 %global update  40
 %global minor   00
 
+%_buildshell    /bin/bash
+
 Name:           tuxjdk
 Version:        8.%{update}.%{minor}
 Release:        0
@@ -14,7 +16,6 @@ BuildRequires:  gcc
 BuildRequires:  gcc-c++
 BuildRequires:  autoconf
 BuildRequires:  automake
-BuildRequires:  site-config
 BuildRequires:  time
 BuildRequires:  zip
 BuildRequires:  unzip
