@@ -46,16 +46,15 @@ Index: jdk8u40-b25/jdk/src/share/native/sun/font/freetypeScaler.c
 ===================================================================
 --- jdk8u40-b25.orig/jdk/src/share/native/sun/font/freetypeScaler.c
 +++ jdk8u40-b25/jdk/src/share/native/sun/font/freetypeScaler.c
-@@ -92,6 +92,8 @@ typedef struct FTScalerContext {
+@@ -92,6 +92,7 @@ typedef struct FTScalerContext {
      int        renderFlags;   /* configuration specific to particular engine */
      int        pathType;
      int        ptsz;          /* size in points */
-+    int        pxsz;          /* size in pixels */
 +    int        dpi;           /* screen dpi */
      RenderingProperties* renderingProperties;
  } FTScalerContext;
  
-@@ -502,7 +504,7 @@ static double euclidianDistance(double a
+@@ -501,7 +502,7 @@ static double euclidianDistance(double a
  JNIEXPORT jlong JNICALL
  Java_sun_font_FreetypeFontScaler_createScalerContextNative(
          JNIEnv *env, jobject scaler, jlong pScaler, jdoubleArray matrix,
@@ -64,23 +63,19 @@ Index: jdk8u40-b25/jdk/src/share/native/sun/font/freetypeScaler.c
      double dmat[4], ptsz;
      FTScalerContext *context =
              (FTScalerContext*) calloc(1, sizeof(FTScalerContext));
-@@ -519,6 +521,15 @@ Java_sun_font_FreetypeFontScaler_createS
+@@ -518,6 +519,11 @@ Java_sun_font_FreetypeFontScaler_createS
          //text can not be smaller than 1 point
          ptsz = 1.0;
      }
 +
-+    // scale can be used to calculate both DPI and pixel size,
-+    // with pixel size we have to guess, looks like calculated value has to be rounded up:
-+    double pxsz = ptsz * ptToPxScale + 0.5;
 +    // because we operate with quite high numbers - no need to round up DPI:
 +    double dpi = 72.0 * ptToPxScale;
 +
-+    context->pxsz = (int)pxsz;
 +    context->dpi = (int)dpi;
      context->ptsz = (int)(ptsz * 64);
      context->transform.xx =  FloatToFTFixed((float)dmat[0]/ptsz);
      context->transform.yx = -FloatToFTFixed((float)dmat[1]/ptsz);
-@@ -553,7 +564,12 @@ static int setupFTContext(JNIEnv *env,
+@@ -552,7 +558,12 @@ static int setupFTContext(JNIEnv *env,
  
          FT_Set_Transform(scalerInfo->face, &context->transform, NULL);
  
