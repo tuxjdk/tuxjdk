@@ -2,8 +2,6 @@
 %global update  45
 %global minor   01
 
-%_buildshell    /bin/bash
-
 Name:           tuxjdk
 Version:        8.%{update}.%{minor}
 Release:        0
