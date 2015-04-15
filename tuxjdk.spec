@@ -1,6 +1,6 @@
-%global hgtag   jdk8u40-b25
-%global update  40
-%global minor   00
+%global hgtag   jdk8u45-b14
+%global update  45
+%global minor   01
 
 %_buildshell    /bin/bash
 
