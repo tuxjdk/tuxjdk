@@ -2,8 +2,7 @@ This project contains series of patched to OpenJDK to enhance user experience wi
 
 # Download
 Download latest build of tuxjdk for openSUSE and Fedora here:
-[OBS repository](http://download.opensuse.org/repositories/home:/TheIndifferent:/tuxjdk/)
-
+[OBS repository](http://download.opensuse.org/repositories/home:/TheIndifferent:/tuxjdk/)<br/>
 It will be installed under `/opt/tuxjdk` and will not touch the alternatives and
 any other java binaries you might have in path.
 
