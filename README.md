@@ -9,26 +9,28 @@ any other java binaries you might have in path.
 
 # Quickstart (for packagers and developers)
 
-TuxJdk users [Quilt](http://en.wikipedia.org/wiki/Quilt_(software)) to manage patches, and [here](http://www.suse.de/~agruen/quilt.pdf) is a good tutorial on using Quilt.
+TuxJdk uses [Quilt](http://en.wikipedia.org/wiki/Quilt_(software)) to manage patches, and [here](http://www.suse.de/~agruen/quilt.pdf) is a good tutorial on using Quilt.
 Additionally, project contains number of helper scripts to automate most common tasks.
-To build tuxjdk, do the following steps:
+To apply tuxjdk, do the following steps:
 
 ```bash
 # clone tuxjdk:
 git clone 'https://github.com/TheIndifferent/tuxjdk.git'
 # clone openjdk:
-hg clone 'http://hg.openjdk.java.net/jdk8u/jdk8u' jdk8-tuxjdk
-cd jdk8-tuxjdk
-bash get_source.sh
+HGTAG='jdk8u45-b14'
+hg clone 'http://hg.openjdk.java.net/jdk8u/jdk8u' $HGTAG
+cd $HGTAG
+bash ./get_source.sh
+bash ./common/bin/hgforest.sh checkout $HGTAG
 # run helper script to apply tuxjdk onto openjdk sources:
 ../tuxjdk/applyTuxjdk.sh
 # tuxjdk applied, now we can create external build folder:
-cd ..
-mkdir build
-cd build
-# and run helper script to configure and make tuxjdk images,
-# script takes 3 arguments: openjdk source folder, bootstrap jdk and build number:
-../tuxjdk/configureBuildOpenjdk.sh /opt/jdk7
+mkdir ../build
+cd ../build
+# and run configure script with your favourite options:
+bash ../$HGTAG/configure <your options here>
+# then make images:
+make JAVAC_FLAGS=-g images
 # now wait until the build is complete, and go see the images:
 ls images/j2sdk-image
 ls images/j2re-image
