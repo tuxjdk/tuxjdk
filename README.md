@@ -9,8 +9,8 @@ any other java binaries you might have in path.
 
 # Quickstart (for packagers and developers)
 
-TuxJdk uses [Quilt](http://en.wikipedia.org/wiki/Quilt_(software)) to manage patches, and [here](http://www.suse.de/~agruen/quilt.pdf) is a good tutorial on using Quilt.
-Additionally, project contains number of helper scripts to automate most common tasks.
+TuxJdk uses [Quilt](http://en.wikipedia.org/wiki/Quilt_(software)) to manage patches, and [here](http://www.suse.de/~agruen/quilt.pdf) is a good tutorial on using Quilt.<br/>
+Additionally, project contains number of helper scripts to automate most common tasks.<br/>
 To apply tuxjdk, do the following steps:
 
 ```bash
