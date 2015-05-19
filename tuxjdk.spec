@@ -1,6 +1,6 @@
 %global hgtag   jdk8u45-b14
 %global update  45
-%global minor   01
+%global minor   02
 
 Name:           tuxjdk
 Version:        8.%{update}.%{minor}
@@ -40,6 +40,16 @@ Enhanced Open Java Development Kit for developers on Linux. Contains series of
 patched to OpenJDK to enhance user experience with Java-based and Swing-based
 tools (NetBeans, Idea, Android Studio, etc).
 
+%package        launchers
+Summary:        Path launchers for TuxJdk
+Group:          Development/Languages
+Requires:       tuxjdk
+BuildArch:      noarch
+
+%description    launchers
+Launch scripts for TuxJdk, located under /usr/local/bin, to be the first
+in path but not to conflict with existing jpackage-based packages.
+
 %prep
 %setup -q
 %setup -q -T -D -a 1
@@ -50,41 +60,41 @@ tools (NetBeans, Idea, Android Studio, etc).
 %build
 pushd %{hgtag}
 bash ./common/autoconf/autogen.sh
-popd
-mkdir build
-pushd build
-BOOT_JDK="$JAVA_HOME"
-unset JAVA_HOME
-bash ../%{hgtag}/configure \
---with-zlib=system \
---with-giflib=system \
---disable-debug-symbols \
---disable-zip-debug-info \
---with-debug-level=release \
---with-milestone='fcs' \
---with-update-version=%{update} \
---with-user-release-suffix=tuxjdk \
---enable-unlimited-crypto \
---with-build-number=%{minor} \
---with-stdc++lib=dynamic \
---with-boot-jdk="$BOOT_JDK"
-make \
-  JAVAC_FLAGS=-g \
-  HOTSPOT_VM_DISTRO=TuxJdk \
-  HOTSPOT_BUILD_VERSION=tuxjdk-%{minor} \
-  images
+bash ../configureBuildOpenjdk.sh
 popd
 
 %install
 install -dm 755 %{buildroot}/opt/%{name}
-cd build/images/j2sdk-image
+# processing the image:
+pushd %{hgtag}/build/images/j2sdk-image
+# deleting useless files:
+rm -rf 'demo' 'man' 'sample'
+# fixing permissions:
+find -type d -exec chmod 755 {} \;
+find -type f -exec chmod 644 {} \;
+pushd bin
+chmod 755 *
+popd
+pushd jre/bin
+chmod 755 *
+popd
+# copy everything to /opt:
 cp -R * %{buildroot}/opt/%{name}/
+popd
+# copy launchers to /usr/local/bin:
+install -Dm 755 launcher.sh %{buildroot}/usr/local/bin/java
+install -Dm 755 launcher.sh %{buildroot}/usr/local/bin/javac
+install -Dm 755 launcher.sh %{buildroot}/usr/local/bin/javap
+install -Dm 755 launcher.sh %{buildroot}/usr/local/bin/javah
+chmod 755 %{buildroot}/usr/local/bin/java %{buildroot}/usr/local/bin/javac %{buildroot}/usr/local/bin/javap %{buildroot}/usr/local/bin/javah
 
 %files
 %defattr(644,root,root,755)
 /opt/%{name}
-%attr(755,root,root) /opt/%{name}/bin/*
-%attr(755,root,root) /opt/%{name}/jre/bin/*
+
+%files launchers
+%defattr(755,root,root,755)
+/usr/local/bin/*
 
 %changelog
 * Fri Apr  3 2015 baiduzhyi.devel@gmail.com
