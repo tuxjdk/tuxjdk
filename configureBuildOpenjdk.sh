@@ -25,6 +25,11 @@ unset JDK_HOME
 unset JRE_HOME
 unset _JAVA_OPTIONS
 
+## jdk8u45 still does not support linux 4.0 officially,
+## so we have to disable os version check because
+## tumbleweed already has 4.0-based kernel:
+export DISABLE_HOTSPOT_OS_VERSION_CHECK=ok
+
 (
   rm -rf 'build' && mkdir 'build' && cd 'build' \
   && bash ../configure \
