@@ -2,9 +2,15 @@
 %global update  45
 %global minor   02
 
+# openjdk build system is different,
+# we are building release so there is no useful debuginfo,
+# so disabling debuginfo package creation:
+%global debug_package %{nil}
+
 Name:           tuxjdk
 Version:        8.%{update}.%{minor}
 Release:        0
+URL:            https://github.com/TheIndifferent/tuxjdk
 Summary:        Enhanced Open Java Development Kit for developers on Linux
 #License:        GNU General Public License, version 2, with the Classpath Exception
 License:        GPL-2.0+
@@ -93,6 +99,14 @@ install -Dm 755 launcher.sh %{buildroot}/usr/local/bin/javah
 /usr/local/bin/*
 
 %changelog
+* Tue May 26 2015 baiduzhyi.devel@gmail.com
+- Version 02 of tuxjdk:
+  * spec file uses script for build;
+  * added launcher scripts under /usr/local/bin/ ;
+  * dropped verbosity fix patch;
+  * merging jre and jdk into single dir;
+  * adding rpmlint config;
+  * checking support for other distributions;
 * Fri Apr  3 2015 baiduzhyi.devel@gmail.com
 - Working spec file based on tuxjdk 8.40.0.
 * Thu Apr  2 2015 baiduzhyi.devel@gmail.com

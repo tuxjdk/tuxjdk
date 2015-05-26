@@ -1,7 +1,7 @@
 This project contains series of patched to OpenJDK to enhance user experience with Java-based and Swing-based tools (NetBeans, Idea, Android Studio, etc)
 
 # Download
-Download latest build of tuxjdk for openSUSE and Fedora here:
+Download latest build of tuxjdk for different distributions here:
 [OBS repository](http://download.opensuse.org/repositories/home:/TheIndifferent:/tuxjdk/)<br/>
 It will be installed under `/opt/tuxjdk` and will not touch the alternatives and
 any other java binaries you might have in path.
