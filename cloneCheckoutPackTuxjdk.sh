@@ -4,7 +4,11 @@ readonly TAG="$1"
 readonly GIT="$( which git 2>/dev/null )"
 readonly TAR="$( which tar 2>/dev/null )"
 
-readonly UPSTREAM='https://github.com/TheIndifferent/tuxjdk.git'
+if [[ -n "$2" ]] ; then
+  readonly UPSTREAM="$2"
+else
+  readonly UPSTREAM='https://github.com/TheIndifferent/tuxjdk.git'
+fi
 
 if [[ -z $TAG ]] ; then
   readonly NAME='tuxjdk'
@@ -39,6 +43,6 @@ if [[ -n $TAG ]] ; then
 fi
 
 echo -e '\e[0;35mCreating tarball...\e[0m'
-( tar --exclude-vcs --exclude-vcs-ignores -cJf "$NAME.tar.xz" "$NAME" )
+( tar --exclude-vcs -cJf "$NAME.tar.xz" "$NAME" )
 
 echo -e '\e[0;35mDone.\e[0m'

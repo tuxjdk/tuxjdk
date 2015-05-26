@@ -6,7 +6,8 @@ Name:           tuxjdk
 Version:        8.%{update}.%{minor}
 Release:        0
 Summary:        Enhanced Open Java Development Kit for developers on Linux
-License:        GNU General Public License, version 2, with the Classpath Exception
+#License:        GNU General Public License, version 2, with the Classpath Exception
+License:        GPL-2.0+
 Group:          Development/Languages
 BuildRequires:  bash
 BuildRequires:  make
@@ -34,6 +35,7 @@ BuildRequires:  java-devel
 BuildRequires:  quilt
 Source0:        %{name}-%{version}.tar.xz
 Source1:        %{hgtag}.tar.xz
+Source13:       %{name}-rpmlintrc
 
 %description
 Enhanced Open Java Development Kit for developers on Linux. Contains series of
@@ -68,16 +70,10 @@ install -dm 755 %{buildroot}/opt/%{name}
 # processing the image:
 pushd %{hgtag}/build/images/j2sdk-image
 # deleting useless files:
-rm -rf 'demo' 'man' 'sample'
-# fixing permissions:
-find -type d -exec chmod 755 {} \;
-find -type f -exec chmod 644 {} \;
-pushd bin
-chmod 755 *
-popd
-pushd jre/bin
-chmod 755 *
-popd
+rm -rf 'demo' 'sample'
+# merge jre and jdk images:
+cp -Rf jre/* .
+rm -rf jre
 # copy everything to /opt:
 cp -R * %{buildroot}/opt/%{name}/
 popd
@@ -91,6 +87,7 @@ chmod 755 %{buildroot}/usr/local/bin/java %{buildroot}/usr/local/bin/javac %{bui
 %files
 %defattr(644,root,root,755)
 /opt/%{name}
+%attr(755,root,root) /opt/%{name}/bin/*
 
 %files launchers
 %defattr(755,root,root,755)

@@ -1,0 +1,2 @@
+setBadness('devel-file-in-non-devel-package', 0)
+setBadness('incorrect-fsf-address', 0)

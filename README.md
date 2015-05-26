@@ -35,6 +35,11 @@ ls images/j2sdk-image
 ls images/j2re-image
 ```
 
+# Distribution packagers
+
+* Source package files for Ubuntu/Arch/others are appreciated.
+* Project is organized into series of patches, they should not be dependent. Feel free to use them selectively and report any issues.
+
 # Patches list
 ```
 TODO
