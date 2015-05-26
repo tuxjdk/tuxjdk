@@ -82,7 +82,6 @@ install -Dm 755 launcher.sh %{buildroot}/usr/local/bin/java
 install -Dm 755 launcher.sh %{buildroot}/usr/local/bin/javac
 install -Dm 755 launcher.sh %{buildroot}/usr/local/bin/javap
 install -Dm 755 launcher.sh %{buildroot}/usr/local/bin/javah
-chmod 755 %{buildroot}/usr/local/bin/java %{buildroot}/usr/local/bin/javac %{buildroot}/usr/local/bin/javap %{buildroot}/usr/local/bin/javah
 
 %files
 %defattr(644,root,root,755)
