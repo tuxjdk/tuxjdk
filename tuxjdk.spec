@@ -39,6 +39,7 @@ BuildRequires:  libXt-devel
 BuildRequires:  libXtst-devel
 BuildRequires:  java-devel
 BuildRequires:  quilt
+BuildRequires:  fdupes
 Source0:        %{name}-%{version}.tar.xz
 Source1:        %{hgtag}.tar.xz
 Source13:       %{name}-rpmlintrc
@@ -77,28 +78,32 @@ install -dm 755 %{buildroot}/opt/%{name}
 pushd %{hgtag}/build/images/j2sdk-image
 # deleting useless files:
 rm -rf 'demo' 'sample'
-# merge jre and jdk images:
-cp -Rf jre/* .
-rm -rf jre
 # copy everything to /opt:
 cp -R * %{buildroot}/opt/%{name}/
 popd
+# hardlinks instead of duplicates:
+%fdupes %{buildroot}/opt/%{name}/
 # copy launchers to /usr/local/bin:
 install -Dm 755 launcher.sh %{buildroot}/usr/local/bin/java
 install -Dm 755 launcher.sh %{buildroot}/usr/local/bin/javac
 install -Dm 755 launcher.sh %{buildroot}/usr/local/bin/javap
 install -Dm 755 launcher.sh %{buildroot}/usr/local/bin/javah
+# hadlink launchers as well:
+%fdupes %{buildroot}/usr/local/bin/
 
 %files
 %defattr(644,root,root,755)
 /opt/%{name}
 %attr(755,root,root) /opt/%{name}/bin/*
+%attr(755,root,root) /opt/%{name}/jre/bin/*
 
 %files launchers
 %defattr(755,root,root,755)
 /usr/local/bin/*
 
 %changelog
+* Fri May 29 2015 baiduzhyi.devel@gmail.com
+- Do not merge jre into jdk image.
 * Tue May 26 2015 baiduzhyi.devel@gmail.com
 - Version 02 of tuxjdk:
   * spec file uses script for build;
