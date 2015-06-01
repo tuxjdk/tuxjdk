@@ -1,35 +1,107 @@
-Index: jdk8u40-b25/jdk/src/share/classes/java/awt/font/FontRenderContext.java
+Index: jdk8u45-b14/jdk/src/share/classes/java/awt/font/FontRenderContext.java
 ===================================================================
---- jdk8u40-b25.orig/jdk/src/share/classes/java/awt/font/FontRenderContext.java
-+++ jdk8u40-b25/jdk/src/share/classes/java/awt/font/FontRenderContext.java
-@@ -75,7 +75,7 @@ public class FontRenderContext {
+--- jdk8u45-b14.orig/jdk/src/share/classes/java/awt/font/FontRenderContext.java
++++ jdk8u45-b14/jdk/src/share/classes/java/awt/font/FontRenderContext.java
+@@ -69,13 +69,23 @@ public class FontRenderContext {
+     private transient Object fmHintValue;
+     private transient boolean defaulting;
+ 
++    private static final Object DEFAULT_TEXT_ANTIALIASING_HINT = discoverDefaultTextAntialiasingHint();
++    private static Object discoverDefaultTextAntialiasingHint() {
++        Object hint = sun.font.FontConfigManager.getFontConfigAAHint();
++        if (hint == null) {
++            new Exception().printStackTrace();
++            return VALUE_TEXT_ANTIALIAS_DEFAULT;
++        }
++        return hint;
++    }
++
+     /**
+      * Constructs a new <code>FontRenderContext</code>
+      * object.
       *
       */
      protected FontRenderContext() {
 -        aaHintValue = VALUE_TEXT_ANTIALIAS_DEFAULT;
-+        aaHintValue = VALUE_TEXT_ANTIALIAS_LCD_HRGB;
++        aaHintValue = DEFAULT_TEXT_ANTIALIASING_HINT;
          fmHintValue = VALUE_FRACTIONALMETRICS_DEFAULT;
          defaulting = true;
      }
-Index: jdk8u40-b25/jdk/src/share/classes/sun/java2d/SunGraphics2D.java
+Index: jdk8u45-b14/jdk/src/share/classes/sun/java2d/SunGraphics2D.java
 ===================================================================
---- jdk8u40-b25.orig/jdk/src/share/classes/sun/java2d/SunGraphics2D.java
-+++ jdk8u40-b25/jdk/src/share/classes/sun/java2d/SunGraphics2D.java
-@@ -278,7 +278,7 @@ public final class SunGraphics2D
+--- jdk8u45-b14.orig/jdk/src/share/classes/sun/java2d/SunGraphics2D.java
++++ jdk8u45-b14/jdk/src/share/classes/sun/java2d/SunGraphics2D.java
+@@ -264,6 +264,16 @@ public final class SunGraphics2D
+         }
+     }
+ 
++    private static final int DEFAULT_TEXT_ANTIALIASING_HINT = discoverDefaultTextAntialiasingHint();
++    private static int discoverDefaultTextAntialiasingHint() {
++        Object hint = sun.font.FontConfigManager.getFontConfigAAHint();
++        if (hint == null) {
++            new Exception().printStackTrace();
++            return SunHints.INTVAL_TEXT_ANTIALIAS_DEFAULT;
++        }
++        return ((SunHints.Value)hint).getIndex();
++    }
++
+     public SunGraphics2D(SurfaceData sd, Color fg, Color bg, Font f) {
+         surfaceData = sd;
+         foregroundColor = fg;
+@@ -278,7 +288,7 @@ public final class SunGraphics2D
  
          renderHint = SunHints.INTVAL_RENDER_DEFAULT;
          antialiasHint = SunHints.INTVAL_ANTIALIAS_OFF;
 -        textAntialiasHint = SunHints.INTVAL_TEXT_ANTIALIAS_DEFAULT;
-+        textAntialiasHint = SunHints.INTVAL_TEXT_ANTIALIAS_LCD_HRGB;
++        textAntialiasHint = DEFAULT_TEXT_ANTIALIASING_HINT;
          fractionalMetricsHint = SunHints.INTVAL_FRACTIONALMETRICS_OFF;
          lcdTextContrast = lcdTextContrastDefaultValue;
          interpolationHint = -1;
-@@ -1354,7 +1354,7 @@ public final class SunGraphics2D
+@@ -1217,7 +1227,7 @@ public final class SunGraphics2D
+                 if (stateChanged) {
+                     textStateChanged =
+                         (textAntialiasHint ==
+-                         SunHints.INTVAL_TEXT_ANTIALIAS_DEFAULT);
++                         DEFAULT_TEXT_ANTIALIASING_HINT);
+                     if (strokeState != STROKE_CUSTOM) {
+                         validateBasicStroke((BasicStroke) stroke);
+                     }
+@@ -1354,7 +1364,7 @@ public final class SunGraphics2D
          this.hints = null;
          renderHint = SunHints.INTVAL_RENDER_DEFAULT;
          antialiasHint = SunHints.INTVAL_ANTIALIAS_OFF;
 -        textAntialiasHint = SunHints.INTVAL_TEXT_ANTIALIAS_DEFAULT;
-+        textAntialiasHint = SunHints.INTVAL_TEXT_ANTIALIAS_LCD_HRGB;
++        textAntialiasHint = DEFAULT_TEXT_ANTIALIASING_HINT;
          fractionalMetricsHint = SunHints.INTVAL_FRACTIONALMETRICS_OFF;
          lcdTextContrast = lcdTextContrastDefaultValue;
          interpolationHint = -1;
+Index: jdk8u45-b14/jdk/src/share/classes/sun/awt/SunHints.java
+===================================================================
+--- jdk8u45-b14.orig/jdk/src/share/classes/sun/awt/SunHints.java
++++ jdk8u45-b14/jdk/src/share/classes/sun/awt/SunHints.java
+@@ -113,6 +113,11 @@ public class SunHints {
+         }
+ 
+         public static Value get(int keyindex, int valueindex) {
++            // array is initialized by accessing RenderingHints,
++            // but it is possible that no one did it before us,
++            // to prevent empty array here we have to touch RenderingHints
++            // ourselves:
++            RenderingHints.Key key = RenderingHints.KEY_TEXT_ANTIALIASING;
+             return ValueObjects[keyindex][valueindex];
+         }
+ 
+Index: jdk8u45-b14/jdk/src/share/classes/sun/java2d/SurfaceData.java
+===================================================================
+--- jdk8u45-b14.orig/jdk/src/share/classes/sun/java2d/SurfaceData.java
++++ jdk8u45-b14/jdk/src/share/classes/sun/java2d/SurfaceData.java
+@@ -504,8 +504,7 @@ public abstract class SurfaceData
+         // For now the answer can only be true in the following cases:
+         if (sg2d.compositeState <= SunGraphics2D.COMP_ISCOPY &&
+             sg2d.paintState <= SunGraphics2D.PAINT_ALPHACOLOR &&
+-            sg2d.clipState <= SunGraphics2D.CLIP_RECTANGULAR &&
+-            sg2d.surfaceData.getTransparency() == Transparency.OPAQUE)
++            sg2d.clipState <= SunGraphics2D.CLIP_RECTANGULAR)
+         {
+             if (haveLCDLoop == LOOP_UNKNOWN) {
+                 DrawGlyphListLCD loop =
