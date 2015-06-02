@@ -1,0 +1,17 @@
+Index: jdk8u-vendor/jdk/src/share/native/java/lang/System.c
+===================================================================
+--- jdk8u-vendor.orig/jdk/src/share/native/java/lang/System.c
++++ jdk8u-vendor/jdk/src/share/native/java/lang/System.c
+@@ -97,9 +97,9 @@ Java_java_lang_System_identityHashCode(J
+     } else ((void) 0)
+ 
+ #ifndef VENDOR /* Third party may overwrite this. */
+-#define VENDOR "Oracle Corporation"
+-#define VENDOR_URL "http://java.oracle.com/"
+-#define VENDOR_URL_BUG "http://bugreport.sun.com/bugreport/"
++#define VENDOR "TuxJdk"
++#define VENDOR_URL "https://github.com/TheIndifferent/tuxjdk"
++#define VENDOR_URL_BUG "https://github.com/TheIndifferent/tuxjdk/issues"
+ #endif
+ 
+ #define JAVA_MAX_SUPPORTED_VERSION 52

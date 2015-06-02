@@ -1,3 +1,4 @@
+tuxjdk/change-vendor.diff
 tune/default-gc.diff
 tuxjdk/add-fontconfig-support.diff
 tuxjdk/fix-typographical-point-size.diff
