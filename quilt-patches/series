@@ -1,8 +1,7 @@
 tuxjdk/change-vendor.diff
 tune/default-gc.diff
 tuxjdk/add-fontconfig-support.diff
-tuxjdk/fix-typographical-point-size.diff
-tuxjdk/lcd-hrgb-by-default.diff
+tuxjdk/configurable-ui-fonts.diff
 backport/giflib5.diff
 tune/full-srczip.diff
 tune/empty-ctsym.diff

@@ -1,0 +1,1681 @@
+Index: jdk8u45-b14/jdk/src/share/classes/com/sun/java/swing/plaf/gtk/PangoFonts.java
+===================================================================
+--- jdk8u45-b14.orig/jdk/src/share/classes/com/sun/java/swing/plaf/gtk/PangoFonts.java
++++ jdk8u45-b14/jdk/src/share/classes/com/sun/java/swing/plaf/gtk/PangoFonts.java
+@@ -159,32 +159,6 @@ class PangoFonts {
+          * equivalent sizes. If such a change were ever to be made in GTK
+          * we would need to update for that.
+          */
+-        double dsize = size;
+-        int dpi = 96;
+-        Object value =
+-            Toolkit.getDefaultToolkit().getDesktopProperty("gnome.Xft/DPI");
+-        if (value instanceof Integer) {
+-            dpi = ((Integer)value).intValue() / 1024;
+-            if (dpi == -1) {
+-              dpi = 96;
+-            }
+-            if (dpi < 50) { /* 50 dpi is the minimum value gnome allows */
+-                dpi = 50;
+-            }
+-            /* The Java rasteriser assumes pts are in a user space of
+-             * 72 dpi, so we need to adjust for that.
+-             */
+-            dsize = ((double)(dpi * size)/ 72.0);
+-        } else {
+-            /* If there's no property, GTK scales for the resolution
+-             * reported by the Xserver using the formula listed above.
+-             * fontScale already accounts for the 72 dpi Java 2D space.
+-             */
+-            dsize = size * fontScale;
+-        }
+-
+-        /* Round size to nearest integer pt size */
+-        size = (int)(dsize + 0.5);
+         if (size < 1) {
+             size = 1;
+         }
+@@ -193,13 +167,11 @@ class PangoFonts {
+         if (FontUtilities.mapFcName(fcFamilyLC) != null) {
+             /* family is a Fc/Pango logical font which we need to expand. */
+             Font font =  FontUtilities.getFontConfigFUIR(fcFamilyLC, style, size);
+-            font = font.deriveFont(style, (float)dsize);
+             return new FontUIResource(font);
+         } else {
+             /* It's a physical font which we will create with a fallback */
+             Font font = new Font(family, style, size);
+             /* a roundabout way to set the font size in floating points */
+-            font = font.deriveFont(style, (float)dsize);
+             FontUIResource fuir = new FontUIResource(font);
+             return FontUtilities.getCompositeFontUIResource(fuir);
+         }
+Index: jdk8u45-b14/jdk/src/share/classes/com/sun/java/swing/plaf/motif/MotifDesktopIconUI.java
+===================================================================
+--- jdk8u45-b14.orig/jdk/src/share/classes/com/sun/java/swing/plaf/motif/MotifDesktopIconUI.java
++++ jdk8u45-b14/jdk/src/share/classes/com/sun/java/swing/plaf/motif/MotifDesktopIconUI.java
+@@ -62,8 +62,15 @@ public class MotifDesktopIconUI extends
+     final static int LABEL_HEIGHT = 18;
+     final static int LABEL_DIVIDER = 4;    // padding between icon and label
+ 
+-    final static Font defaultTitleFont =
+-        new Font(Font.SANS_SERIF, Font.PLAIN, 12);
++    final static Font defaultTitleFont = defaultTitleFont();
++    private static Font defaultTitleFont() {
++        Object o = Toolkit.getDefaultToolkit().getDesktopProperty("ui.defaultFont");
++        if (o instanceof Font) { // implicit null check
++            Font f = (Font) o;
++            return f;
++        }
++        return new Font(Font.SANS_SERIF, Font.PLAIN, 9);
++    }
+ 
+     public static ComponentUI createUI(JComponent c)    {
+         return new MotifDesktopIconUI();
+Index: jdk8u45-b14/jdk/src/share/classes/com/sun/java/swing/plaf/motif/MotifLookAndFeel.java
+===================================================================
+--- jdk8u45-b14.orig/jdk/src/share/classes/com/sun/java/swing/plaf/motif/MotifLookAndFeel.java
++++ jdk8u45-b14/jdk/src/share/classes/com/sun/java/swing/plaf/motif/MotifLookAndFeel.java
+@@ -28,6 +28,7 @@ package com.sun.java.swing.plaf.motif;
+ import java.awt.Color;
+ import java.awt.Font;
+ import java.awt.Insets;
++import java.awt.Toolkit;
+ import java.awt.event.KeyEvent;
+ import java.awt.event.InputEvent;
+ import java.util.*;
+@@ -188,14 +189,18 @@ public class MotifLookAndFeel extends Ba
+ 
+         initResourceBundle(table);
+ 
+-        FontUIResource dialogPlain12 = new FontUIResource(Font.DIALOG,
+-                                                          Font.PLAIN, 12);
+-        FontUIResource serifPlain12 = new FontUIResource(Font.SERIF,
+-                                                          Font.PLAIN, 12);
+-        FontUIResource sansSerifPlain12 = new FontUIResource(Font.SANS_SERIF,
+-                                                          Font.PLAIN, 12);
+-        FontUIResource monospacedPlain12 = new FontUIResource(Font.MONOSPACED,
+-                                                          Font.PLAIN, 12);
++        Font f;
++        Object o = Toolkit.getDefaultToolkit().getDesktopProperty("ui.defaultFont");
++        if (o instanceof Font) { // implicit null check
++            f = (Font) o;
++        } else {
++            f = new Font(Font.SANS_SERIF, Font.PLAIN, 9);
++        }
++        FontUIResource dialogPlain = new FontUIResource(f);
++        FontUIResource serifPlain = new FontUIResource(Font.SERIF, Font.PLAIN, f.getSize());
++        FontUIResource sansSerifPlain = dialogPlain;
++        FontUIResource monospacedPlain = new FontUIResource(Font.MONOSPACED, Font.PLAIN, f.getSize());
++
+         ColorUIResource red = new ColorUIResource(Color.red);
+         ColorUIResource black = new ColorUIResource(Color.black);
+         ColorUIResource white = new ColorUIResource(Color.white);
+@@ -558,9 +563,9 @@ public class MotifLookAndFeel extends Ba
+ 
+             "Panel.background", table.get("control"),
+             "Panel.foreground", table.get("textText"),
+-            "Panel.font", dialogPlain12,
++            "Panel.font", dialogPlain,
+ 
+-            "ProgressBar.font", dialogPlain12,
++            "ProgressBar.font", dialogPlain,
+             "ProgressBar.foreground", controlDarker,
+             "ProgressBar.background", table.get("control"),
+             "ProgressBar.selectionForeground", table.get("control"),
+@@ -575,7 +580,7 @@ public class MotifLookAndFeel extends Ba
+             "Button.background", table.get("control"),
+             "Button.foreground", table.get("controlText"),
+             "Button.select", table.get("controlLightShadow"),
+-            "Button.font", dialogPlain12,
++            "Button.font", dialogPlain,
+             "Button.focusInputMap", new UIDefaults.LazyInputMap(new Object[] {
+                           "SPACE", "pressed",
+                  "released SPACE", "released"
+@@ -617,8 +622,8 @@ public class MotifLookAndFeel extends Ba
+ 
+             // Menus
+             "Menu.border", menuMarginBorder,
+-            "Menu.font", dialogPlain12,
+-            "Menu.acceleratorFont", dialogPlain12,
++            "Menu.font", dialogPlain,
++            "Menu.acceleratorFont", dialogPlain,
+             "Menu.acceleratorSelectionForeground", menuItemPressedForeground,
+             "Menu.foreground", table.get("menuText"),
+             "Menu.background", table.get("menu"),
+@@ -639,13 +644,13 @@ public class MotifLookAndFeel extends Ba
+             "MenuBar.border", menuBarBorder,
+             "MenuBar.background", table.get("menu"),
+             "MenuBar.foreground", table.get("menuText"),
+-            "MenuBar.font", dialogPlain12,
++            "MenuBar.font", dialogPlain,
+             "MenuBar.windowBindings", new Object[] {
+                 "F10", "takeFocus" },
+ 
+             "MenuItem.border", menuMarginBorder,
+-            "MenuItem.font", dialogPlain12,
+-            "MenuItem.acceleratorFont", dialogPlain12,
++            "MenuItem.font", dialogPlain,
++            "MenuItem.acceleratorFont", dialogPlain,
+             "MenuItem.acceleratorSelectionForeground", menuItemPressedForeground,
+             "MenuItem.foreground", table.get("menuText"),
+             "MenuItem.background", table.get("menu"),
+@@ -655,8 +660,8 @@ public class MotifLookAndFeel extends Ba
+             "MenuItem.arrowIcon", menuItemArrowIcon,
+ 
+             "RadioButtonMenuItem.border", menuMarginBorder,
+-            "RadioButtonMenuItem.font", dialogPlain12,
+-            "RadioButtonMenuItem.acceleratorFont", dialogPlain12,
++            "RadioButtonMenuItem.font", dialogPlain,
++            "RadioButtonMenuItem.acceleratorFont", dialogPlain,
+             "RadioButtonMenuItem.acceleratorSelectionForeground", menuItemPressedForeground,
+             "RadioButtonMenuItem.foreground", table.get("menuText"),
+             "RadioButtonMenuItem.background", table.get("menu"),
+@@ -666,8 +671,8 @@ public class MotifLookAndFeel extends Ba
+             "RadioButtonMenuItem.arrowIcon", menuItemArrowIcon,
+ 
+             "CheckBoxMenuItem.border", menuMarginBorder,
+-            "CheckBoxMenuItem.font", dialogPlain12,
+-            "CheckBoxMenuItem.acceleratorFont", dialogPlain12,
++            "CheckBoxMenuItem.font", dialogPlain,
++            "CheckBoxMenuItem.acceleratorFont", dialogPlain,
+             "CheckBoxMenuItem.acceleratorSelectionForeground", menuItemPressedForeground,
+             "CheckBoxMenuItem.foreground", table.get("menuText"),
+             "CheckBoxMenuItem.background", table.get("menu"),
+@@ -679,10 +684,10 @@ public class MotifLookAndFeel extends Ba
+             "PopupMenu.background", table.get("menu"),
+             "PopupMenu.border", popupMenuBorder,
+             "PopupMenu.foreground", table.get("menuText"),
+-            "PopupMenu.font", dialogPlain12,
++            "PopupMenu.font", dialogPlain,
+             "PopupMenu.consumeEventOnClose", Boolean.TRUE,
+ 
+-            "Label.font", dialogPlain12,
++            "Label.font", dialogPlain,
+             "Label.background", table.get("control"),
+             "Label.foreground", table.get("controlText"),
+ 
+@@ -802,7 +807,7 @@ public class MotifLookAndFeel extends Ba
+                          "END", "maxScroll"
+                  }),
+ 
+-            "ScrollPane.font", dialogPlain12,
++            "ScrollPane.font", dialogPlain,
+             "ScrollPane.background", table.get("control"),
+             "ScrollPane.foreground", table.get("controlText"),
+             "ScrollPane.border", null,
+@@ -825,7 +830,7 @@ public class MotifLookAndFeel extends Ba
+                         "ctrl END", "scrollEnd"
+                  }),
+ 
+-            "Slider.font", dialogPlain12,
++            "Slider.font", dialogPlain,
+             "Slider.border", focusBevelBorder,
+             "Slider.foreground", table.get("control"),
+             "Slider.background", controlDarker,
+@@ -881,7 +886,7 @@ public class MotifLookAndFeel extends Ba
+             "ctrl shift TAB", "focusOutBackward"
+                }),
+ 
+-            "TabbedPane.font", dialogPlain12,
++            "TabbedPane.font", dialogPlain,
+             "TabbedPane.background", table.get("control"),
+             "TabbedPane.foreground", table.get("controlText"),
+             "TabbedPane.light", table.get("controlHighlight"),
+@@ -1145,7 +1150,7 @@ public class MotifLookAndFeel extends Ba
+             "ComboBox.selectionForeground", table.get("text"),
+             "ComboBox.disabledBackground", table.get("control"),
+             "ComboBox.disabledForeground", table.get("textInactiveText"),
+-            "ComboBox.font", dialogPlain12,
++            "ComboBox.font", dialogPlain,
+             "ComboBox.ancestorInputMap", new UIDefaults.LazyInputMap(new Object[] {
+                    "ESCAPE", "hidePopup",
+                   "PAGE_UP", "pageUpPassThrough",
+@@ -1168,7 +1173,7 @@ public class MotifLookAndFeel extends Ba
+             "TextField.selectionForeground", table.get("textHighlightText"),
+             "TextField.background", table.get("window"),
+             "TextField.foreground", table.get("textText"),
+-            "TextField.font", sansSerifPlain12,
++            "TextField.font", sansSerifPlain,
+             "TextField.border", textFieldBorder,
+             "TextField.focusInputMap", fieldInputMap,
+ 
+@@ -1179,7 +1184,7 @@ public class MotifLookAndFeel extends Ba
+             "PasswordField.selectionForeground", table.get("textHighlightText"),
+             "PasswordField.background", table.get("window"),
+             "PasswordField.foreground", table.get("textText"),
+-            "PasswordField.font", monospacedPlain12,
++            "PasswordField.font", monospacedPlain,
+             "PasswordField.border", textFieldBorder,
+             "PasswordField.focusInputMap", passwordInputMap,
+ 
+@@ -1190,7 +1195,7 @@ public class MotifLookAndFeel extends Ba
+             "TextArea.selectionForeground", table.get("textHighlightText"),
+             "TextArea.background", table.get("window"),
+             "TextArea.foreground", table.get("textText"),
+-            "TextArea.font", monospacedPlain12,
++            "TextArea.font", monospacedPlain,
+             "TextArea.border", marginBorder,
+             "TextArea.focusInputMap", multilineInputMap,
+ 
+@@ -1201,7 +1206,7 @@ public class MotifLookAndFeel extends Ba
+             "TextPane.selectionForeground", table.get("textHighlightText"),
+             "TextPane.background", white,
+             "TextPane.foreground", table.get("textText"),
+-            "TextPane.font", serifPlain12,
++            "TextPane.font", serifPlain,
+             "TextPane.border", marginBorder,
+             "TextPane.focusInputMap", multilineInputMap,
+ 
+@@ -1212,7 +1217,7 @@ public class MotifLookAndFeel extends Ba
+             "EditorPane.selectionForeground", table.get("textHighlightText"),
+             "EditorPane.background", white,
+             "EditorPane.foreground", table.get("textText"),
+-            "EditorPane.font", serifPlain12,
++            "EditorPane.font", serifPlain,
+             "EditorPane.border", marginBorder,
+             "EditorPane.focusInputMap", multilineInputMap,
+ 
+Index: jdk8u45-b14/jdk/src/share/classes/java/awt/Font.java
+===================================================================
+--- jdk8u45-b14.orig/jdk/src/share/classes/java/awt/Font.java
++++ jdk8u45-b14/jdk/src/share/classes/java/awt/Font.java
+@@ -1466,9 +1466,9 @@ public class Font implements java.io.Ser
+      * so the font name may not be properly recognised.
+      *
+      * <p>
+-     * The default size is 12 and the default style is PLAIN.
++     * The default size is 9 and the default style is PLAIN.
+      * If <code>str</code> does not specify a valid size, the returned
+-     * <code>Font</code> has a size of 12.  If <code>str</code> does not
++     * <code>Font</code> has a size of 9.  If <code>str</code> does not
+      * specify a valid style, the returned Font has a style of PLAIN.
+      * If you do not specify a valid font name in
+      * the <code>str</code> argument, this method will return
+@@ -1477,7 +1477,7 @@ public class Font implements java.io.Ser
+      * your system, use the
+      * {@link GraphicsEnvironment#getAvailableFontFamilyNames()} method.
+      * If <code>str</code> is <code>null</code>, a new <code>Font</code>
+-     * is returned with the family name "Dialog", a size of 12 and a
++     * is returned with the family name "Dialog", a size of 9 and a
+      * PLAIN style.
+      * @param str the name of the font, or <code>null</code>
+      * @return the <code>Font</code> object that <code>str</code>
+@@ -1489,7 +1489,7 @@ public class Font implements java.io.Ser
+     public static Font decode(String str) {
+         String fontName = str;
+         String styleName = "";
+-        int fontSize = 12;
++        int fontSize = 9;
+         int fontStyle = Font.PLAIN;
+ 
+         if (str == null) {
+@@ -1508,7 +1508,7 @@ public class Font implements java.io.Ser
+                 fontSize =
+                     Integer.valueOf(str.substring(sizeIndex+1)).intValue();
+                 if (fontSize <= 0) {
+-                    fontSize = 12;
++                    fontSize = 9;
+                 }
+             } catch (NumberFormatException e) {
+                 /* It wasn't a valid size, if we didn't also find the
+Index: jdk8u45-b14/jdk/src/share/classes/java/awt/font/FontRenderContext.java
+===================================================================
+--- jdk8u45-b14.orig/jdk/src/share/classes/java/awt/font/FontRenderContext.java
++++ jdk8u45-b14/jdk/src/share/classes/java/awt/font/FontRenderContext.java
+@@ -69,13 +69,23 @@ public class FontRenderContext {
+     private transient Object fmHintValue;
+     private transient boolean defaulting;
+ 
++    private static final Object DEFAULT_TEXT_ANTIALIASING_HINT = discoverDefaultTextAntialiasingHint();
++    private static Object discoverDefaultTextAntialiasingHint() {
++        Object hint = sun.font.FontConfigManager.getFontConfigAAHint();
++        if (hint == null) {
++            new Exception().printStackTrace();
++            return VALUE_TEXT_ANTIALIAS_DEFAULT;
++        }
++        return hint;
++    }
++
+     /**
+      * Constructs a new <code>FontRenderContext</code>
+      * object.
+      *
+      */
+     protected FontRenderContext() {
+-        aaHintValue = VALUE_TEXT_ANTIALIAS_DEFAULT;
++        aaHintValue = DEFAULT_TEXT_ANTIALIASING_HINT;
+         fmHintValue = VALUE_FRACTIONALMETRICS_DEFAULT;
+         defaulting = true;
+     }
+Index: jdk8u45-b14/jdk/src/share/classes/javax/swing/UIManager.java
+===================================================================
+--- jdk8u45-b14.orig/jdk/src/share/classes/javax/swing/UIManager.java
++++ jdk8u45-b14/jdk/src/share/classes/javax/swing/UIManager.java
+@@ -59,6 +59,7 @@ import sun.security.action.GetPropertyAc
+ import sun.swing.SwingUtilities2;
+ import java.lang.reflect.Method;
+ import java.util.HashMap;
++import javax.swing.plaf.FontUIResource;
+ import sun.awt.AppContext;
+ import sun.awt.AWTAccessor;
+ 
+@@ -1409,6 +1410,22 @@ public class UIManager implements Serial
+ 
+     private static void initializeSystemDefaults(Properties swingProps) {
+         getLAFState().swingProps = swingProps;
++        Font defaultFont;
++        Object o = Toolkit.getDefaultToolkit().getDesktopProperty("ui.defaultFont");
++        if (o instanceof Font) { // implicit null check
++            defaultFont = (Font) o;
++        } else {
++            defaultFont = new Font(Font.SANS_SERIF, Font.PLAIN, 9);
++        }
++        defaultFont = new FontUIResource(defaultFont);
++        UIDefaults systemDefaults = getLAFState().getSystemDefaults();
++        if (systemDefaults == null) {
++            systemDefaults = new UIDefaults();
++            getLAFState().setSystemDefaults(systemDefaults);
++        }
++        systemDefaults.put("ui.defaultFont", defaultFont);
++        systemDefaults.put("ui.defaultFont.size", defaultFont.getSize());
++        systemDefaults.put("customFontSize", defaultFont.getSize());
+     }
+ 
+ 
+Index: jdk8u45-b14/jdk/src/share/classes/javax/swing/border/TitledBorder.java
+===================================================================
+--- jdk8u45-b14.orig/jdk/src/share/classes/javax/swing/border/TitledBorder.java
++++ jdk8u45-b14/jdk/src/share/classes/javax/swing/border/TitledBorder.java
+@@ -687,7 +687,7 @@ public class TitledBorder extends Abstra
+                 return font;
+             }
+         }
+-        return new Font(Font.DIALOG, Font.PLAIN, 12);
++        return UIManager.getFont("ui.defaultFont");
+     }
+ 
+     private Color getColor(Component c) {
+Index: jdk8u45-b14/jdk/src/share/classes/javax/swing/colorchooser/DefaultPreviewPanel.java
+===================================================================
+--- jdk8u45-b14.orig/jdk/src/share/classes/javax/swing/colorchooser/DefaultPreviewPanel.java
++++ jdk8u45-b14/jdk/src/share/classes/javax/swing/colorchooser/DefaultPreviewPanel.java
+@@ -61,7 +61,7 @@ class DefaultPreviewPanel extends JPanel
+ 
+ 
+     private int textGap = 5;
+-    private Font font = new Font(Font.DIALOG, Font.PLAIN, 12);
++    private Font font = UIManager.getFont("ui.defaultFont");
+     private String sampleText;
+ 
+     private int swatchWidth = 50;
+Index: jdk8u45-b14/jdk/src/share/classes/javax/swing/plaf/basic/BasicLookAndFeel.java
+===================================================================
+--- jdk8u45-b14.orig/jdk/src/share/classes/javax/swing/plaf/basic/BasicLookAndFeel.java
++++ jdk8u45-b14/jdk/src/share/classes/javax/swing/plaf/basic/BasicLookAndFeel.java
+@@ -459,29 +459,31 @@ public abstract class BasicLookAndFeel e
+         Long oneThousand = new Long(1000);
+ 
+         // *** Shared Fonts
+-        Integer twelve = new Integer(12);
+-        Integer fontPlain = new Integer(Font.PLAIN);
+-        Integer fontBold = new Integer(Font.BOLD);
+-        Object dialogPlain12 = new SwingLazyValue(
++        Font f;
++        Object o = Toolkit.getDefaultToolkit().getDesktopProperty("ui.defaultFont");
++        if (o instanceof Font) { // implicit null check
++            f = (Font) o;
++        } else {
++            f = new Font(Font.SANS_SERIF, Font.PLAIN, 9);
++        }
++        Integer fontSize = f.getSize();
++        Object dialogPlain = new SwingLazyValue(
+                           "javax.swing.plaf.FontUIResource",
+                           null,
+-                          new Object[] {Font.DIALOG, fontPlain, twelve});
+-        Object serifPlain12 = new SwingLazyValue(
++                          new Object[] {f.getFamily(), f.getStyle(), fontSize});
++        Object serifPlain = new SwingLazyValue(
+                           "javax.swing.plaf.FontUIResource",
+                           null,
+-                          new Object[] {Font.SERIF, fontPlain, twelve});
+-        Object sansSerifPlain12 =  new SwingLazyValue(
++                          new Object[] {Font.SERIF, Font.PLAIN, fontSize});
++        Object sansSerifPlain =  dialogPlain;
++        Object monospacedPlain = new SwingLazyValue(
+                           "javax.swing.plaf.FontUIResource",
+                           null,
+-                          new Object[] {Font.SANS_SERIF, fontPlain, twelve});
+-        Object monospacedPlain12 = new SwingLazyValue(
++                          new Object[] {Font.MONOSPACED, Font.PLAIN, fontSize});
++        Object dialogBold = new SwingLazyValue(
+                           "javax.swing.plaf.FontUIResource",
+                           null,
+-                          new Object[] {Font.MONOSPACED, fontPlain, twelve});
+-        Object dialogBold12 = new SwingLazyValue(
+-                          "javax.swing.plaf.FontUIResource",
+-                          null,
+-                          new Object[] {Font.DIALOG, fontBold, twelve});
++                          new Object[] {f.getFamily(), Font.BOLD, fontSize});
+ 
+ 
+         // *** Shared Colors
+@@ -670,7 +672,7 @@ public abstract class BasicLookAndFeel e
+         Integer ten = new Integer(10);
+         Object optionPaneBorder = new SwingLazyValue(
+                            "javax.swing.plaf.BorderUIResource$EmptyBorderUIResource",
+-                           new Object[] {ten, ten, twelve, ten});
++                           new Object[] {ten, ten, fontSize, ten});
+ 
+         Object optionPaneButtonAreaBorder = new SwingLazyValue(
+                            "javax.swing.plaf.BorderUIResource$EmptyBorderUIResource",
+@@ -760,7 +762,7 @@ public abstract class BasicLookAndFeel e
+ 
+             // *** Buttons
+             "Button.defaultButtonFollowsFocus", Boolean.TRUE,
+-            "Button.font", dialogPlain12,
++            "Button.font", dialogPlain,
+             "Button.background", control,
+             "Button.foreground", controlText,
+             "Button.shadow", controlShadow,
+@@ -778,7 +780,7 @@ public abstract class BasicLookAndFeel e
+                 "released ENTER", "released"
+               }),
+ 
+-            "ToggleButton.font", dialogPlain12,
++            "ToggleButton.font", dialogPlain,
+             "ToggleButton.background", control,
+             "ToggleButton.foreground", controlText,
+             "ToggleButton.shadow", controlShadow,
+@@ -795,7 +797,7 @@ public abstract class BasicLookAndFeel e
+                    "released SPACE", "released"
+                 }),
+ 
+-            "RadioButton.font", dialogPlain12,
++            "RadioButton.font", dialogPlain,
+             "RadioButton.background", control,
+             "RadioButton.foreground", controlText,
+             "RadioButton.shadow", controlShadow,
+@@ -814,7 +816,7 @@ public abstract class BasicLookAndFeel e
+                          "RETURN", "pressed"
+               }),
+ 
+-            "CheckBox.font", dialogPlain12,
++            "CheckBox.font", dialogPlain,
+             "CheckBox.background", control,
+             "CheckBox.foreground", controlText,
+             "CheckBox.border", radioButtonBorder,
+@@ -830,7 +832,7 @@ public abstract class BasicLookAndFeel e
+             "FileChooser.useSystemExtensionHiding", Boolean.FALSE,
+ 
+             // *** ColorChooser
+-            "ColorChooser.font", dialogPlain12,
++            "ColorChooser.font", dialogPlain,
+             "ColorChooser.background", control,
+             "ColorChooser.foreground", controlText,
+ 
+@@ -839,7 +841,7 @@ public abstract class BasicLookAndFeel e
+             "ColorChooser.swatchesDefaultRecentColor", control,
+ 
+             // *** ComboBox
+-            "ComboBox.font", sansSerifPlain12,
++            "ComboBox.font", sansSerifPlain,
+             "ComboBox.background", window,
+             "ComboBox.foreground", textText,
+             "ComboBox.buttonBackground", control,
+@@ -885,7 +887,7 @@ public abstract class BasicLookAndFeel e
+             "FileView.floppyDriveIcon", floppyDriveIcon,
+ 
+             // *** InternalFrame
+-            "InternalFrame.titleFont", dialogBold12,
++            "InternalFrame.titleFont", dialogBold,
+             "InternalFrame.borderColor", control,
+             "InternalFrame.borderShadow", controlShadow,
+             "InternalFrame.borderDarkShadow", controlDkShadow,
+@@ -971,7 +973,7 @@ public abstract class BasicLookAndFeel e
+               }),
+ 
+             // *** Label
+-            "Label.font", dialogPlain12,
++            "Label.font", dialogPlain,
+             "Label.background", control,
+             "Label.foreground", controlText,
+             "Label.disabledForeground", white,
+@@ -979,7 +981,7 @@ public abstract class BasicLookAndFeel e
+             "Label.border", null,
+ 
+             // *** List
+-            "List.font", dialogPlain12,
++            "List.font", dialogPlain,
+             "List.background", window,
+             "List.foreground", textText,
+             "List.selectionBackground", textHighlight,
+@@ -1078,7 +1080,7 @@ public abstract class BasicLookAndFeel e
+                  }),
+ 
+             // *** Menus
+-            "MenuBar.font", dialogPlain12,
++            "MenuBar.font", dialogPlain,
+             "MenuBar.background", menu,
+             "MenuBar.foreground", menuText,
+             "MenuBar.shadow", controlShadow,
+@@ -1087,8 +1089,8 @@ public abstract class BasicLookAndFeel e
+             "MenuBar.windowBindings", new Object[] {
+                 "F10", "takeFocus" },
+ 
+-            "MenuItem.font", dialogPlain12,
+-            "MenuItem.acceleratorFont", dialogPlain12,
++            "MenuItem.font", dialogPlain,
++            "MenuItem.acceleratorFont", dialogPlain,
+             "MenuItem.background", menu,
+             "MenuItem.foreground", menuText,
+             "MenuItem.selectionForeground", textHighlightText,
+@@ -1104,8 +1106,8 @@ public abstract class BasicLookAndFeel e
+             "MenuItem.arrowIcon", menuItemArrowIcon,
+             "MenuItem.commandSound", null,
+ 
+-            "RadioButtonMenuItem.font", dialogPlain12,
+-            "RadioButtonMenuItem.acceleratorFont", dialogPlain12,
++            "RadioButtonMenuItem.font", dialogPlain,
++            "RadioButtonMenuItem.acceleratorFont", dialogPlain,
+             "RadioButtonMenuItem.background", menu,
+             "RadioButtonMenuItem.foreground", menuText,
+             "RadioButtonMenuItem.selectionForeground", textHighlightText,
+@@ -1120,8 +1122,8 @@ public abstract class BasicLookAndFeel e
+             "RadioButtonMenuItem.arrowIcon", menuItemArrowIcon,
+             "RadioButtonMenuItem.commandSound", null,
+ 
+-            "CheckBoxMenuItem.font", dialogPlain12,
+-            "CheckBoxMenuItem.acceleratorFont", dialogPlain12,
++            "CheckBoxMenuItem.font", dialogPlain,
++            "CheckBoxMenuItem.acceleratorFont", dialogPlain,
+             "CheckBoxMenuItem.background", menu,
+             "CheckBoxMenuItem.foreground", menuText,
+             "CheckBoxMenuItem.selectionForeground", textHighlightText,
+@@ -1136,8 +1138,8 @@ public abstract class BasicLookAndFeel e
+             "CheckBoxMenuItem.arrowIcon", menuItemArrowIcon,
+             "CheckBoxMenuItem.commandSound", null,
+ 
+-            "Menu.font", dialogPlain12,
+-            "Menu.acceleratorFont", dialogPlain12,
++            "Menu.font", dialogPlain,
++            "Menu.acceleratorFont", dialogPlain,
+             "Menu.background", menu,
+             "Menu.foreground", menuText,
+             "Menu.selectionForeground", textHighlightText,
+@@ -1176,7 +1178,7 @@ public abstract class BasicLookAndFeel e
+              "Menu.preserveTopLevelSelection", Boolean.FALSE,
+ 
+             // PopupMenu
+-            "PopupMenu.font", dialogPlain12,
++            "PopupMenu.font", dialogPlain,
+             "PopupMenu.background", menu,
+             "PopupMenu.foreground", menuText,
+             "PopupMenu.border", popupMenuBorder,
+@@ -1210,7 +1212,7 @@ public abstract class BasicLookAndFeel e
+             // You can additionaly define OptionPane.messageFont which will
+             // dictate the fonts used for the message, and
+             // OptionPane.buttonFont, which defines the font for the buttons.
+-            "OptionPane.font", dialogPlain12,
++            "OptionPane.font", dialogPlain,
+             "OptionPane.background", control,
+             "OptionPane.foreground", controlText,
+             "OptionPane.messageForeground", controlText,
+@@ -1240,12 +1242,12 @@ public abstract class BasicLookAndFeel e
+             "OptionPane.buttonClickThreshhold", fiveHundred,
+ 
+             // *** Panel
+-            "Panel.font", dialogPlain12,
++            "Panel.font", dialogPlain,
+             "Panel.background", control,
+             "Panel.foreground", textText,
+ 
+             // *** ProgressBar
+-            "ProgressBar.font", dialogPlain12,
++            "ProgressBar.font", dialogPlain,
+             "ProgressBar.foreground",  textHighlight,
+             "ProgressBar.background", control,
+             "ProgressBar.selectionForeground", control,
+@@ -1301,7 +1303,7 @@ public abstract class BasicLookAndFeel e
+                  }),
+             "ScrollBar.width", new Integer(16),
+ 
+-            "ScrollPane.font", dialogPlain12,
++            "ScrollPane.font", dialogPlain,
+             "ScrollPane.background", control,
+             "ScrollPane.foreground", controlText,
+             "ScrollPane.border", textFieldBorder,
+@@ -1329,12 +1331,12 @@ public abstract class BasicLookAndFeel e
+                   "ctrl PAGE_DOWN", "scrollLeft",
+                  }),
+ 
+-            "Viewport.font", dialogPlain12,
++            "Viewport.font", dialogPlain,
+             "Viewport.background", control,
+             "Viewport.foreground", textText,
+ 
+             // *** Slider
+-            "Slider.font", dialogPlain12,
++            "Slider.font", dialogPlain,
+             "Slider.foreground", control,
+             "Slider.background", control,
+             "Slider.highlight", controlLtHighlight,
+@@ -1372,7 +1374,7 @@ public abstract class BasicLookAndFeel e
+             "Slider.onlyLeftMouseButtonDrag", Boolean.TRUE,
+ 
+             // *** Spinner
+-            "Spinner.font", monospacedPlain12,
++            "Spinner.font", monospacedPlain,
+             "Spinner.background", control,
+             "Spinner.foreground", control,
+             "Spinner.border", textFieldBorder,
+@@ -1417,7 +1419,7 @@ public abstract class BasicLookAndFeel e
+                  }),
+ 
+             // *** TabbedPane
+-            "TabbedPane.font", dialogPlain12,
++            "TabbedPane.font", dialogPlain,
+             "TabbedPane.background", control,
+             "TabbedPane.foreground", controlText,
+             "TabbedPane.highlight", controlLtHighlight,
+@@ -1466,7 +1468,7 @@ public abstract class BasicLookAndFeel e
+ 
+ 
+             // *** Table
+-            "Table.font", dialogPlain12,
++            "Table.font", dialogPlain,
+             "Table.foreground", controlText,  // cell text color
+             "Table.background", window,  // cell background color
+             "Table.selectionForeground", textHighlightText,
+@@ -1585,7 +1587,7 @@ public abstract class BasicLookAndFeel e
+                                           "Table.sortIconColor" }),
+             "Table.sortIconColor", controlShadow,
+ 
+-            "TableHeader.font", dialogPlain12,
++            "TableHeader.font", dialogPlain,
+             "TableHeader.foreground", controlText, // header text color
+             "TableHeader.background", control, // header background
+             "TableHeader.cellBorder", tableHeaderBorder,
+@@ -1614,7 +1616,7 @@ public abstract class BasicLookAndFeel e
+                }),
+ 
+             // *** Text
+-            "TextField.font", sansSerifPlain12,
++            "TextField.font", sansSerifPlain,
+             "TextField.background", window,
+             "TextField.foreground", textText,
+             "TextField.shadow", controlShadow,
+@@ -1630,7 +1632,7 @@ public abstract class BasicLookAndFeel e
+             "TextField.border", textFieldBorder,
+             "TextField.margin", zeroInsets,
+ 
+-            "FormattedTextField.font", sansSerifPlain12,
++            "FormattedTextField.font", sansSerifPlain,
+             "FormattedTextField.background", window,
+             "FormattedTextField.foreground", textText,
+             "FormattedTextField.inactiveForeground", textInactiveText,
+@@ -1689,7 +1691,7 @@ public abstract class BasicLookAndFeel e
+                           "KP_DOWN", "decrement",
+               }),
+ 
+-            "PasswordField.font", monospacedPlain12,
++            "PasswordField.font", monospacedPlain,
+             "PasswordField.background", window,
+             "PasswordField.foreground", textText,
+             "PasswordField.inactiveForeground", textInactiveText,
+@@ -1702,7 +1704,7 @@ public abstract class BasicLookAndFeel e
+             "PasswordField.margin", zeroInsets,
+             "PasswordField.echoChar", '*',
+ 
+-            "TextArea.font", monospacedPlain12,
++            "TextArea.font", monospacedPlain,
+             "TextArea.background", window,
+             "TextArea.foreground", textText,
+             "TextArea.inactiveForeground", textInactiveText,
+@@ -1713,7 +1715,7 @@ public abstract class BasicLookAndFeel e
+             "TextArea.border", marginBorder,
+             "TextArea.margin", zeroInsets,
+ 
+-            "TextPane.font", serifPlain12,
++            "TextPane.font", serifPlain,
+             "TextPane.background", white,
+             "TextPane.foreground", textText,
+             "TextPane.selectionBackground", textHighlight,
+@@ -1724,7 +1726,7 @@ public abstract class BasicLookAndFeel e
+             "TextPane.border", marginBorder,
+             "TextPane.margin", editorMargin,
+ 
+-            "EditorPane.font", serifPlain12,
++            "EditorPane.font", serifPlain,
+             "EditorPane.background", white,
+             "EditorPane.foreground", textText,
+             "EditorPane.selectionBackground", textHighlight,
+@@ -1742,12 +1744,12 @@ public abstract class BasicLookAndFeel e
+                                     BasicLookAndFeel.class,
+                                     "icons/image-failed.png"),
+             // *** TitledBorder
+-            "TitledBorder.font", dialogPlain12,
++            "TitledBorder.font", dialogPlain,
+             "TitledBorder.titleColor", controlText,
+             "TitledBorder.border", etchedBorder,
+ 
+             // *** ToolBar
+-            "ToolBar.font", dialogPlain12,
++            "ToolBar.font", dialogPlain,
+             "ToolBar.background", control,
+             "ToolBar.foreground", controlText,
+             "ToolBar.shadow", controlShadow,
+@@ -1773,7 +1775,7 @@ public abstract class BasicLookAndFeel e
+                  }),
+ 
+             // *** ToolTips
+-            "ToolTip.font", sansSerifPlain12,
++            "ToolTip.font", sansSerifPlain,
+             "ToolTip.background", table.get("info"),
+             "ToolTip.foreground", table.get("infoText"),
+             "ToolTip.border", blackLineBorder,
+@@ -1793,7 +1795,7 @@ public abstract class BasicLookAndFeel e
+         // *** Tree
+             "Tree.paintLines", Boolean.TRUE,
+             "Tree.lineTypeDashed", Boolean.FALSE,
+-            "Tree.font", dialogPlain12,
++            "Tree.font", dialogPlain,
+             "Tree.background", window,
+             "Tree.foreground", textText,
+             "Tree.hash", gray,
+Index: jdk8u45-b14/jdk/src/share/classes/javax/swing/plaf/metal/DefaultMetalTheme.java
+===================================================================
+--- jdk8u45-b14.orig/jdk/src/share/classes/javax/swing/plaf/metal/DefaultMetalTheme.java
++++ jdk8u45-b14/jdk/src/share/classes/javax/swing/plaf/metal/DefaultMetalTheme.java
+@@ -89,106 +89,29 @@ import sun.swing.SwingUtilities2;
+  * @author Steve Wilson
+  */
+ public class DefaultMetalTheme extends MetalTheme {
+-    /**
+-     * Whether or not fonts should be plain.  This is only used if
+-     * the defaults property 'swing.boldMetal' == "false".
+-     */
+-    private static final boolean PLAIN_FONTS;
+-
+-    /**
+-     * Names of the fonts to use.
+-     */
+-    private static final String[] fontNames = {
+-        Font.DIALOG,Font.DIALOG,Font.DIALOG,Font.DIALOG,Font.DIALOG,Font.DIALOG
+-    };
+-    /**
+-     * Styles for the fonts.  This is ignored if the defaults property
+-     * <code>swing.boldMetal</code> is false, or PLAIN_FONTS is true.
+-     */
+-    private static final int[] fontStyles = {
+-        Font.BOLD, Font.PLAIN, Font.PLAIN, Font.BOLD, Font.BOLD, Font.PLAIN
+-    };
+-    /**
+-     * Sizes for the fonts.
+-     */
+-    private static final int[] fontSizes = {
+-        12, 12, 12, 12, 12, 10
+-    };
+-
+-    // note the properties listed here can currently be used by people
+-    // providing runtimes to hint what fonts are good.  For example the bold
+-    // dialog font looks bad on a Mac, so Apple could use this property to
+-    // hint at a good font.
+-    //
+-    // However, we don't promise to support these forever.  We may move
+-    // to getting these from the swing.properties file, or elsewhere.
+-    /**
+-     * System property names used to look up fonts.
+-     */
+-    private static final String[] defaultNames = {
+-        "swing.plaf.metal.controlFont",
+-        "swing.plaf.metal.systemFont",
+-        "swing.plaf.metal.userFont",
+-        "swing.plaf.metal.controlFont",
+-        "swing.plaf.metal.controlFont",
+-        "swing.plaf.metal.smallFont"
+-    };
+ 
+     /**
+      * Returns the ideal font name for the font identified by key.
+      */
+     static String getDefaultFontName(int key) {
+-        return fontNames[key];
++        return LazyDefaultFonts.defaultFont.getFamily();
+     }
+ 
+     /**
+      * Returns the ideal font size for the font identified by key.
+      */
+     static int getDefaultFontSize(int key) {
+-        return fontSizes[key];
++        if (key == SUB_TEXT_FONT) {
++            return LazyDefaultFonts.smallFont.getSize();
++        }
++        return LazyDefaultFonts.defaultFont.getSize();
+     }
+ 
+     /**
+      * Returns the ideal font style for the font identified by key.
+      */
+     static int getDefaultFontStyle(int key) {
+-        if (key != WINDOW_TITLE_FONT) {
+-            Object boldMetal = null;
+-            if (AppContext.getAppContext().get(
+-                    SwingUtilities2.LAF_STATE_KEY) != null) {
+-                // Only access the boldMetal key if a look and feel has
+-                // been loaded, otherwise we'll trigger loading the look
+-                // and feel.
+-                boldMetal = UIManager.get("swing.boldMetal");
+-            }
+-            if (boldMetal != null) {
+-                if (Boolean.FALSE.equals(boldMetal)) {
+-                    return Font.PLAIN;
+-                }
+-            }
+-            else if (PLAIN_FONTS) {
+-                return Font.PLAIN;
+-            }
+-        }
+-        return fontStyles[key];
+-    }
+-
+-    /**
+-     * Returns the default used to look up the specified font.
+-     */
+-    static String getDefaultPropertyName(int key) {
+-        return defaultNames[key];
+-    }
+-
+-    static {
+-        Object boldProperty = java.security.AccessController.doPrivileged(
+-            new GetPropertyAction("swing.boldMetal"));
+-        if (boldProperty == null || !"false".equals(boldProperty)) {
+-            PLAIN_FONTS = false;
+-        }
+-        else {
+-            PLAIN_FONTS = true;
+-        }
++        return LazyDefaultFonts.defaultFont.getStyle();
+     }
+ 
+     private static final ColorUIResource primary1 = new ColorUIResource(
+@@ -204,8 +127,6 @@ public class DefaultMetalTheme extends M
+     private static final ColorUIResource secondary3 = new ColorUIResource(
+                               204, 204, 204);
+ 
+-    private FontDelegate fontDelegate;
+-
+     /**
+      * Returns the name of this theme. This returns {@code "Steel"}.
+      *
+@@ -330,17 +251,13 @@ public class DefaultMetalTheme extends M
+     }
+ 
+     private FontUIResource getFont(int key) {
+-        return fontDelegate.getFont(key);
++        if (key == SUB_TEXT_FONT) {
++            return LazyDefaultFonts.smallFont;
++        }
++        return LazyDefaultFonts.defaultFont;
+     }
+ 
+     void install() {
+-        if (MetalLookAndFeel.isWindows() &&
+-                             MetalLookAndFeel.useSystemFonts()) {
+-            fontDelegate = new WindowsFontDelegate();
+-        }
+-        else {
+-            fontDelegate = new FontDelegate();
+-        }
+     }
+ 
+     /**
+@@ -351,83 +268,23 @@ public class DefaultMetalTheme extends M
+     }
+ 
+     /**
+-     * FontDelegates add an extra level of indirection to obtaining fonts.
+-     */
+-    private static class FontDelegate {
+-        private static int[] defaultMapping = {
+-            CONTROL_TEXT_FONT, SYSTEM_TEXT_FONT,
+-            USER_TEXT_FONT, CONTROL_TEXT_FONT,
+-            CONTROL_TEXT_FONT, SUB_TEXT_FONT
+-        };
+-        FontUIResource fonts[];
+-
+-        // menu and window are mapped to controlFont
+-        public FontDelegate() {
+-            fonts = new FontUIResource[6];
+-        }
+-
+-        public FontUIResource getFont(int type) {
+-            int mappedType = defaultMapping[type];
+-            if (fonts[type] == null) {
+-                Font f = getPrivilegedFont(mappedType);
+-
+-                if (f == null) {
+-                    f = new Font(getDefaultFontName(type),
+-                             getDefaultFontStyle(type),
+-                             getDefaultFontSize(type));
+-                }
+-                fonts[type] = new FontUIResource(f);
+-            }
+-            return fonts[type];
+-        }
+-
+-        /**
+-         * This is the same as invoking
+-         * <code>Font.getFont(key)</code>, with the exception
+-         * that it is wrapped inside a <code>doPrivileged</code> call.
+-         */
+-        protected Font getPrivilegedFont(final int key) {
+-            return java.security.AccessController.doPrivileged(
+-                new java.security.PrivilegedAction<Font>() {
+-                    public Font run() {
+-                        return Font.getFont(getDefaultPropertyName(key));
+-                    }
+-                }
+-                );
+-        }
+-    }
+-
+-    /**
+-     * The WindowsFontDelegate uses DesktopProperties to obtain fonts.
++     * Guarantee lazyness of font initialization. We don't want to waste the memory
++     * if user will never use those fonts.
+      */
+-    private static class WindowsFontDelegate extends FontDelegate {
+-        private MetalFontDesktopProperty[] props;
+-        private boolean[] checkedPriviledged;
+-
+-        public WindowsFontDelegate() {
+-            props = new MetalFontDesktopProperty[6];
+-            checkedPriviledged = new boolean[6];
+-        }
+-
+-        public FontUIResource getFont(int type) {
+-            if (fonts[type] != null) {
+-                return fonts[type];
+-            }
+-            if (!checkedPriviledged[type]) {
+-                Font f = getPrivilegedFont(type);
+-
+-                checkedPriviledged[type] = true;
+-                if (f != null) {
+-                    fonts[type] = new FontUIResource(f);
+-                    return fonts[type];
+-                }
+-            }
+-            if (props[type] == null) {
+-                props[type] = new MetalFontDesktopProperty(type);
+-            }
+-            // While passing null may seem bad, we don't actually use
+-            // the table and looking it up is rather expensive.
+-            return (FontUIResource)props[type].createValue(null);
++    private static class LazyDefaultFonts {
++        private static FontUIResource defaultFont;
++        private static FontUIResource smallFont;
++        static {
++            Font f;
++            Object o = Toolkit.getDefaultToolkit().getDesktopProperty("ui.defaultFont");
++            if (o instanceof Font) { // implicit null check
++                f = (Font) o;
++            } else {
++                f = new Font(Font.SANS_SERIF, Font.PLAIN, 9);
++            }
++            // 90% of size will be small font:
++            defaultFont = new FontUIResource(f);
++            smallFont = new FontUIResource(f.getFamily(), f.getStyle(), (f.getSize() * 9 / 10));
+         }
+     }
+ }
+Index: jdk8u45-b14/jdk/src/share/classes/javax/swing/plaf/nimbus/Defaults.template
+===================================================================
+--- jdk8u45-b14.orig/jdk/src/share/classes/javax/swing/plaf/nimbus/Defaults.template
++++ jdk8u45-b14/jdk/src/share/classes/javax/swing/plaf/nimbus/Defaults.template
+@@ -46,6 +46,7 @@ import java.awt.Dimension;
+ import java.awt.Font;
+ import java.awt.Graphics2D;
+ import java.awt.Insets;
++import java.awt.Toolkit;
+ import java.awt.image.BufferedImage;
+ import static java.awt.image.BufferedImage.*;
+ import java.beans.PropertyChangeEvent;
+@@ -124,6 +125,15 @@ final class ${LAF_NAME}Defaults {
+         UIManager.getDefaults().removePropertyChangeListener(colorTree);
+     }
+ 
++    private FontUIResource defaultFont() {
++        Object o = Toolkit.getDefaultToolkit().getDesktopProperty("ui.defaultFont");
++        if (o instanceof Font) { // implicit null check
++            Font f = (Font) o;
++            return FontUtilities.getFontConfigFUIR(f.getFamily(), f.getStyle(), f.getSize());
++        }
++        return FontUtilities.getFontConfigFUIR(Font.SANS_SERIF, Font.PLAIN, 9);
++    }
++
+     /**
+      * Create a new ${LAF_NAME}Defaults. This constructor is only called from
+      * within ${LAF_NAME}LookAndFeel.
+@@ -135,7 +145,7 @@ final class ${LAF_NAME}Defaults {
+         //regions and their states that this class will use for later lookup.
+         //Additional regions can be registered later by 3rd party components.
+         //These are simply the default registrations.
+-        defaultFont = FontUtilities.getFontConfigFUIR("sans", Font.PLAIN, 12);
++        defaultFont = defaultFont();
+         defaultStyle = new DefaultSynthStyle();
+         defaultStyle.setFont(defaultFont);
+ 
+Index: jdk8u45-b14/jdk/src/share/classes/javax/swing/text/html/StyleSheet.java
+===================================================================
+--- jdk8u45-b14.orig/jdk/src/share/classes/javax/swing/text/html/StyleSheet.java
++++ jdk8u45-b14/jdk/src/share/classes/javax/swing/text/html/StyleSheet.java
+@@ -881,7 +881,7 @@ public class StyleSheet extends StyleCon
+      * Fetches the font to use for the given set of attributes.
+      */
+     public Font getFont(AttributeSet a) {
+-        return css.getFont(this, a, 12, this);
++        return css.getFont(this, a, UIManager.getInt("ui.defaultFont.size"), this);
+     }
+ 
+     /**
+@@ -2467,19 +2467,20 @@ public class StyleSheet extends StyleCon
+             CSS.BackgroundPosition pos = (CSS.BackgroundPosition)a.getAttribute
+                                            (CSS.Attribute.BACKGROUND_POSITION);
+             if (pos != null) {
++                int defaultFontSize = UIManager.getInt("ui.defaultFont.size");
+                 hPosition = pos.getHorizontalPosition();
+                 vPosition = pos.getVerticalPosition();
+                 if (pos.isHorizontalPositionRelativeToSize()) {
+                     flags |= 4;
+                 }
+                 else if (pos.isHorizontalPositionRelativeToSize()) {
+-                    hPosition *= css.getFontSize(a, 12, ss);
++                    hPosition *= css.getFontSize(a, defaultFontSize, ss);
+                 }
+                 if (pos.isVerticalPositionRelativeToSize()) {
+                     flags |= 8;
+                 }
+                 else if (pos.isVerticalPositionRelativeToFontSize()) {
+-                    vPosition *= css.getFontSize(a, 12, ss);
++                    vPosition *= css.getFontSize(a, defaultFontSize, ss);
+                 }
+             }
+             // Determine any repeating values.
+@@ -3331,7 +3332,7 @@ public class StyleSheet extends StyleCon
+      * The HTML/CSS size model has seven slots
+      * that one can assign sizes to.
+      */
+-    static final int sizeMapDefault[] = { 8, 10, 12, 14, 18, 24, 36 };
++    static final int sizeMapDefault[] = { 4, 6, 7, 9, 11, 14, 20 };
+ 
+     private int sizeMap[] = sizeMapDefault;
+     private boolean w3cLengthUnits = false;
+Index: jdk8u45-b14/jdk/src/share/classes/javax/swing/text/html/default.css
+===================================================================
+--- jdk8u45-b14.orig/jdk/src/share/classes/javax/swing/text/html/default.css
++++ jdk8u45-b14/jdk/src/share/classes/javax/swing/text/html/default.css
+@@ -26,8 +26,8 @@
+ /*
+  */
+ 
+-body  {font-size: 14pt;
+-       font-family: Serif;
++body  {font-size: 9pt;
++       font-family: sans-serif;
+        font-weight: normal;
+        margin-left: 0;
+        margin-right: 0;
+@@ -174,12 +174,12 @@ big {font-size: x-large}
+ small {font-size: x-small}
+ 
+ samp {font-size: small;
+-      font-family: Monospaced}
++      font-family: monospace}
+ 
+ cite {font-style: italic}
+ 
+ code {font-size: small;
+-      font-family: Monospaced}
++      font-family: monospace}
+ 
+ dfn {font-style: italic}
+ 
+@@ -190,7 +190,7 @@ i  {font-style: italic}
+ b  {font-weight: bold}
+ 
+ kbd {font-size: small;
+-     font-family: Monospaced}
++     font-family: monospace}
+ 
+ s {text-decoration: line-through}
+ 
+@@ -254,7 +254,7 @@ center {text-align: center}
+ 
+ pre {margin-top: 5;
+      margin-bottom: 5;
+-     font-family: Monospaced}
++     font-family: monospace}
+ 
+ pre p {margin-top: 0}
+ 
+Index: jdk8u45-b14/jdk/src/share/classes/sun/awt/SunHints.java
+===================================================================
+--- jdk8u45-b14.orig/jdk/src/share/classes/sun/awt/SunHints.java
++++ jdk8u45-b14/jdk/src/share/classes/sun/awt/SunHints.java
+@@ -113,6 +113,11 @@ public class SunHints {
+         }
+ 
+         public static Value get(int keyindex, int valueindex) {
++            // array is initialized by accessing RenderingHints,
++            // but it is possible that no one did it before us,
++            // to prevent empty array here we have to touch RenderingHints
++            // ourselves:
++            RenderingHints.Key key = RenderingHints.KEY_TEXT_ANTIALIASING;
+             return ValueObjects[keyindex][valueindex];
+         }
+ 
+Index: jdk8u45-b14/jdk/src/share/classes/sun/awt/image/OffScreenImage.java
+===================================================================
+--- jdk8u45-b14.orig/jdk/src/share/classes/sun/awt/image/OffScreenImage.java
++++ jdk8u45-b14/jdk/src/share/classes/sun/awt/image/OffScreenImage.java
+@@ -32,6 +32,7 @@ import java.awt.Font;
+ import java.awt.Graphics;
+ import java.awt.Graphics2D;
+ import java.awt.GraphicsEnvironment;
++import java.awt.Toolkit;
+ import java.awt.image.BufferedImage;
+ import java.awt.image.ImageProducer;
+ import java.awt.image.ColorModel;
+@@ -88,7 +89,12 @@ public class OffScreenImage extends Buff
+         Font font = c.getFont();
+         if (font == null) {
+             if (defaultFont == null) {
+-                defaultFont = new Font("Dialog", Font.PLAIN, 12);
++                Object o = Toolkit.getDefaultToolkit().getDesktopProperty("ui.defaultFont");
++                if (o instanceof Font) { // implicit null check
++                    defaultFont = (Font)o;
++                } else {
++                    defaultFont = new Font(Font.SANS_SERIF, Font.PLAIN, 9);
++                }
+             }
+             font = defaultFont;
+         }
+Index: jdk8u45-b14/jdk/src/share/classes/sun/awt/image/SunVolatileImage.java
+===================================================================
+--- jdk8u45-b14.orig/jdk/src/share/classes/sun/awt/image/SunVolatileImage.java
++++ jdk8u45-b14/jdk/src/share/classes/sun/awt/image/SunVolatileImage.java
+@@ -32,6 +32,7 @@ import java.awt.Font;
+ import java.awt.Graphics2D;
+ import java.awt.GraphicsConfiguration;
+ import java.awt.ImageCapabilities;
++import java.awt.Toolkit;
+ import java.awt.Transparency;
+ import java.awt.image.BufferedImage;
+ import java.awt.image.ImageObserver;
+@@ -40,6 +41,7 @@ import sun.java2d.SunGraphics2D;
+ import sun.java2d.SurfaceManagerFactory;
+ import sun.java2d.DestSurfaceProvider;
+ import sun.java2d.Surface;
++
+ import static sun.java2d.pipe.hw.AccelSurface.*;
+ 
+ /**
+@@ -199,7 +201,12 @@ public class SunVolatileImage extends Vo
+             return comp.getFont();
+         } else {
+             if (defaultFont == null) {
+-                defaultFont = new Font("Dialog", Font.PLAIN, 12);
++                Object o = Toolkit.getDefaultToolkit().getDesktopProperty("ui.defaultFont");
++                if (o instanceof Font) { // implicit null check
++                    defaultFont = (Font)o;
++                } else {
++                    defaultFont = new Font(Font.SANS_SERIF, Font.PLAIN, 9);
++                }
+             }
+             return defaultFont;
+         }
+Index: jdk8u45-b14/jdk/src/share/classes/sun/font/FreetypeFontScaler.java
+===================================================================
+--- jdk8u45-b14.orig/jdk/src/share/classes/sun/font/FreetypeFontScaler.java
++++ jdk8u45-b14/jdk/src/share/classes/sun/font/FreetypeFontScaler.java
+@@ -24,12 +24,12 @@
+  */
+ 
+ package sun.font;
+-
++import java.awt.geom.AffineTransform;
++import java.awt.GraphicsEnvironment;
+ import java.awt.geom.GeneralPath;
+ import java.awt.geom.Point2D;
+ import java.awt.geom.Rectangle2D;
+ import java.lang.ref.WeakReference;
+-
+ /* This is Freetype based implementation of FontScaler.
+  *
+  * Note that in case of runtime error it is expected that
+@@ -214,8 +214,14 @@ class FreetypeFontScaler extends FontSca
+             int aa, int fm, float boldness, float italic,
+             boolean disableHinting) {
+         if (nativeScaler != 0L) {
++            double ptToPxScale = 1.0d;
++            GraphicsEnvironment graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
++            if (!graphicsEnvironment.isHeadlessInstance()) {
++                AffineTransform normalizingTransform = graphicsEnvironment.getDefaultScreenDevice().getDefaultConfiguration().getNormalizingTransform();
++                ptToPxScale = normalizingTransform.getScaleY();
++            }
+             return createScalerContextNative(nativeScaler, matrix,
+-                                             aa, fm, boldness, italic);
++                                             aa, fm, boldness, italic, ptToPxScale);
+         }
+         return NullFontScaler.getNullScalerContext();
+     }
+@@ -254,7 +260,7 @@ class FreetypeFontScaler extends FontSca
+     private native long getUnitsPerEMNative(long pScaler);
+ 
+     native long createScalerContextNative(long pScaler, double[] matrix,
+-            int aa, int fm, float boldness, float italic);
++            int aa, int fm, float boldness, float italic, double ptToPxScale);
+ 
+     /* Freetype scaler context does not contain any pointers that
+        has to be invalidated if native scaler is bad */
+Index: jdk8u45-b14/jdk/src/share/classes/sun/java2d/SunGraphics2D.java
+===================================================================
+--- jdk8u45-b14.orig/jdk/src/share/classes/sun/java2d/SunGraphics2D.java
++++ jdk8u45-b14/jdk/src/share/classes/sun/java2d/SunGraphics2D.java
+@@ -62,6 +62,7 @@ import java.awt.Rectangle;
+ import java.text.AttributedCharacterIterator;
+ import java.awt.Font;
+ import java.awt.Point;
++import java.awt.Toolkit;
+ import java.awt.image.ImageObserver;
+ import java.awt.Transparency;
+ import java.awt.font.GlyphVector;
+@@ -99,6 +100,7 @@ import sun.awt.image.MultiResolutionImag
+ import static java.awt.geom.AffineTransform.TYPE_FLIP;
+ import static java.awt.geom.AffineTransform.TYPE_MASK_SCALE;
+ import static java.awt.geom.AffineTransform.TYPE_TRANSLATION;
++
+ import sun.awt.image.MultiResolutionToolkitImage;
+ import sun.awt.image.ToolkitImage;
+ 
+@@ -210,8 +212,6 @@ public final class SunGraphics2D
+ 
+     protected static final Stroke defaultStroke = new BasicStroke();
+     protected static final Composite defaultComposite = AlphaComposite.SrcOver;
+-    private static final Font defaultFont =
+-        new Font(Font.DIALOG, Font.PLAIN, 12);
+ 
+     public Paint paint;
+     public Stroke stroke;
+@@ -264,6 +264,16 @@ public final class SunGraphics2D
+         }
+     }
+ 
++    private static final int DEFAULT_TEXT_ANTIALIASING_HINT = discoverDefaultTextAntialiasingHint();
++    private static int discoverDefaultTextAntialiasingHint() {
++        Object hint = sun.font.FontConfigManager.getFontConfigAAHint();
++        if (hint == null) {
++            new Exception().printStackTrace();
++            return SunHints.INTVAL_TEXT_ANTIALIAS_DEFAULT;
++        }
++        return ((SunHints.Value)hint).getIndex();
++    }
++
+     public SunGraphics2D(SurfaceData sd, Color fg, Color bg, Font f) {
+         surfaceData = sd;
+         foregroundColor = fg;
+@@ -278,7 +288,7 @@ public final class SunGraphics2D
+ 
+         renderHint = SunHints.INTVAL_RENDER_DEFAULT;
+         antialiasHint = SunHints.INTVAL_ANTIALIAS_OFF;
+-        textAntialiasHint = SunHints.INTVAL_TEXT_ANTIALIAS_DEFAULT;
++        textAntialiasHint = DEFAULT_TEXT_ANTIALIASING_HINT;
+         fractionalMetricsHint = SunHints.INTVAL_FRACTIONALMETRICS_OFF;
+         lcdTextContrast = lcdTextContrastDefaultValue;
+         interpolationHint = -1;
+@@ -297,7 +307,7 @@ public final class SunGraphics2D
+ 
+         font = f;
+         if (font == null) {
+-            font = defaultFont;
++            font = SunGraphicsEnvironment.LazyDefaultFont.value;
+         }
+ 
+         setDevClip(sd.getBounds());
+@@ -563,7 +573,7 @@ public final class SunGraphics2D
+ 
+     public Font getFont() {
+         if (font == null) {
+-            font = defaultFont;
++            font = SunGraphicsEnvironment.LazyDefaultFont.value;
+         }
+         return font;
+     }
+@@ -1217,7 +1227,7 @@ public final class SunGraphics2D
+                 if (stateChanged) {
+                     textStateChanged =
+                         (textAntialiasHint ==
+-                         SunHints.INTVAL_TEXT_ANTIALIAS_DEFAULT);
++                         DEFAULT_TEXT_ANTIALIASING_HINT);
+                     if (strokeState != STROKE_CUSTOM) {
+                         validateBasicStroke((BasicStroke) stroke);
+                     }
+@@ -1354,7 +1364,7 @@ public final class SunGraphics2D
+         this.hints = null;
+         renderHint = SunHints.INTVAL_RENDER_DEFAULT;
+         antialiasHint = SunHints.INTVAL_ANTIALIAS_OFF;
+-        textAntialiasHint = SunHints.INTVAL_TEXT_ANTIALIAS_DEFAULT;
++        textAntialiasHint = DEFAULT_TEXT_ANTIALIASING_HINT;
+         fractionalMetricsHint = SunHints.INTVAL_FRACTIONALMETRICS_OFF;
+         lcdTextContrast = lcdTextContrastDefaultValue;
+         interpolationHint = -1;
+Index: jdk8u45-b14/jdk/src/share/classes/sun/java2d/SunGraphicsEnvironment.java
+===================================================================
+--- jdk8u45-b14.orig/jdk/src/share/classes/sun/java2d/SunGraphicsEnvironment.java
++++ jdk8u45-b14/jdk/src/share/classes/sun/java2d/SunGraphicsEnvironment.java
+@@ -78,7 +78,17 @@ public abstract class SunGraphicsEnviron
+     implements DisplayChangedListener {
+ 
+     public static boolean isOpenSolaris;
+-    private static Font defaultFont;
++    static class LazyDefaultFont {
++        static final Font value = defaultFont();
++
++        private static Font defaultFont() {
++            Object o = Toolkit.getDefaultToolkit().getDesktopProperty("ui.defaultFont");
++            if (o instanceof Font) { // implicit null check
++                return (Font) o;
++            }
++            return new Font(Font.SANS_SERIF, Font.PLAIN, 9);
++        }
++    }
+ 
+     public SunGraphicsEnvironment() {
+         java.security.AccessController.doPrivileged(
+@@ -118,9 +128,6 @@ public abstract class SunGraphicsEnviron
+                     } catch (Exception e) {
+                     }
+ 
+-                /* Establish the default font to be used by SG2D etc */
+-                defaultFont = new Font(Font.DIALOG, Font.PLAIN, 12);
+-
+                 return null;
+             }
+         });
+@@ -183,7 +190,7 @@ public abstract class SunGraphicsEnviron
+             throw new NullPointerException("BufferedImage cannot be null");
+         }
+         SurfaceData sd = SurfaceData.getPrimarySurfaceData(img);
+-        return new SunGraphics2D(sd, Color.white, Color.black, defaultFont);
++        return new SunGraphics2D(sd, Color.white, Color.black, LazyDefaultFont.value);
+     }
+ 
+     public static FontManagerForSGE getFontManagerForSGE() {
+Index: jdk8u45-b14/jdk/src/share/classes/sun/java2d/SurfaceData.java
+===================================================================
+--- jdk8u45-b14.orig/jdk/src/share/classes/sun/java2d/SurfaceData.java
++++ jdk8u45-b14/jdk/src/share/classes/sun/java2d/SurfaceData.java
+@@ -504,8 +504,7 @@ public abstract class SurfaceData
+         // For now the answer can only be true in the following cases:
+         if (sg2d.compositeState <= SunGraphics2D.COMP_ISCOPY &&
+             sg2d.paintState <= SunGraphics2D.PAINT_ALPHACOLOR &&
+-            sg2d.clipState <= SunGraphics2D.CLIP_RECTANGULAR &&
+-            sg2d.surfaceData.getTransparency() == Transparency.OPAQUE)
++            sg2d.clipState <= SunGraphics2D.CLIP_RECTANGULAR)
+         {
+             if (haveLCDLoop == LOOP_UNKNOWN) {
+                 DrawGlyphListLCD loop =
+Index: jdk8u45-b14/jdk/src/share/classes/sun/java2d/loops/BlitBg.java
+===================================================================
+--- jdk8u45-b14.orig/jdk/src/share/classes/sun/java2d/loops/BlitBg.java
++++ jdk8u45-b14/jdk/src/share/classes/sun/java2d/loops/BlitBg.java
+@@ -29,6 +29,7 @@ import java.awt.Font;
+ import java.awt.Color;
+ import java.awt.Composite;
+ import java.awt.AlphaComposite;
++import java.awt.Toolkit;
+ import java.awt.Transparency;
+ import java.awt.image.ColorModel;
+ import java.awt.image.WritableRaster;
+@@ -181,7 +182,14 @@ public class BlitBg extends GraphicsPrim
+                         0, 0, dstx, dsty, width, height);
+         }
+ 
+-        private static Font defaultFont = new Font("Dialog", Font.PLAIN, 12);
++        private static Font defaultFont = defaultFont();
++        private static Font defaultFont() {
++            Object o = Toolkit.getDefaultToolkit().getDesktopProperty("ui.defaultFont");
++            if (o instanceof Font) { // implicit null check
++                return (Font) o;
++            }
++            return new Font(Font.SANS_SERIF, Font.PLAIN, 9);
++        }
+     }
+ 
+     public GraphicsPrimitive traceWrap() {
+Index: jdk8u45-b14/jdk/src/share/native/sun/font/freetypeScaler.c
+===================================================================
+--- jdk8u45-b14.orig/jdk/src/share/native/sun/font/freetypeScaler.c
++++ jdk8u45-b14/jdk/src/share/native/sun/font/freetypeScaler.c
+@@ -92,6 +92,7 @@ typedef struct FTScalerContext {
+     int        renderFlags;   /* configuration specific to particular engine */
+     int        pathType;
+     int        ptsz;          /* size in points */
++    int        dpi;           /* screen dpi */
+     RenderingProperties* renderingProperties;
+ } FTScalerContext;
+ 
+@@ -501,7 +502,7 @@ static double euclidianDistance(double a
+ JNIEXPORT jlong JNICALL
+ Java_sun_font_FreetypeFontScaler_createScalerContextNative(
+         JNIEnv *env, jobject scaler, jlong pScaler, jdoubleArray matrix,
+-        jint aa, jint fm, jfloat boldness, jfloat italic) {
++        jint aa, jint fm, jfloat boldness, jfloat italic, jdouble ptToPxScale) {
+     double dmat[4], ptsz;
+     FTScalerContext *context =
+             (FTScalerContext*) calloc(1, sizeof(FTScalerContext));
+@@ -518,6 +519,11 @@ Java_sun_font_FreetypeFontScaler_createS
+         //text can not be smaller than 1 point
+         ptsz = 1.0;
+     }
++
++    // because we operate with quite high numbers - no need to round up DPI:
++    double dpi = 72.0 * ptToPxScale;
++
++    context->dpi = (int)dpi;
+     context->ptsz = (int)(ptsz * 64);
+     context->transform.xx =  FloatToFTFixed((float)dmat[0]/ptsz);
+     context->transform.yx = -FloatToFTFixed((float)dmat[1]/ptsz);
+@@ -552,7 +558,12 @@ static int setupFTContext(JNIEnv *env,
+ 
+         FT_Set_Transform(scalerInfo->face, &context->transform, NULL);
+ 
+-        errCode = FT_Set_Char_Size(scalerInfo->face, 0, context->ptsz, 72, 72);
++        // we could use calculated pixel size for this,
++        // but who knows if we guessed with rounding up,
++        // so we will leave it up to freetype2 to decide the pixel size
++        // based on DPI value:
++        //errCode = FT_Set_Pixel_Sizes(scalerInfo->face, 0, context->pxsz);
++        errCode = FT_Set_Char_Size(scalerInfo->face, 0, context->ptsz, 0, context->dpi);
+ 
+         if (errCode == 0) {
+             errCode = FT_Activate_Size(scalerInfo->face->size);
+Index: jdk8u45-b14/jdk/src/solaris/classes/sun/awt/X11/InfoWindow.java
+===================================================================
+--- jdk8u45-b14.orig/jdk/src/solaris/classes/sun/awt/X11/InfoWindow.java
++++ jdk8u45-b14/jdk/src/solaris/classes/sun/awt/X11/InfoWindow.java
+@@ -257,7 +257,11 @@ public abstract class InfoWindow extends
+         private final static int BALLOON_ICON_HEIGHT = 32;
+         private final static int BALLOON_TRAY_ICON_INDENT = 0;
+         private final static Color BALLOON_CAPTION_BACKGROUND_COLOR = new Color(200, 200 ,255);
+-        private final static Font BALLOON_CAPTION_FONT = new Font(Font.DIALOG, Font.BOLD, 12);
++        private final static Font BALLOON_CAPTION_FONT = balloonCaptionFont();
++        private static Font balloonCaptionFont() {
++            Font f = XToolkit.LazyDefaultFont.value;
++            return new Font(f.getFamily(), Font.BOLD, f.getSize());
++        }
+ 
+         private Panel mainPanel = new Panel();
+         private Panel captionPanel = new Panel();
+Index: jdk8u45-b14/jdk/src/solaris/classes/sun/awt/X11/XAWTLookAndFeel.java
+===================================================================
+--- jdk8u45-b14.orig/jdk/src/solaris/classes/sun/awt/X11/XAWTLookAndFeel.java
++++ jdk8u45-b14/jdk/src/solaris/classes/sun/awt/X11/XAWTLookAndFeel.java
+@@ -85,12 +85,11 @@ class XAWTLookAndFeel extends MotifLookA
+     protected void initComponentDefaults(UIDefaults table) {
+         super.initComponentDefaults(table);
+ 
+-        FontUIResource dialogPlain12 = new FontUIResource(Font.DIALOG,
+-                                                          Font.PLAIN, 12);
+-        FontUIResource sansSerifPlain12 = new FontUIResource(Font.SANS_SERIF,
+-                                                             Font.PLAIN, 12);
+-        FontUIResource monospacedPlain12 = new FontUIResource(Font.MONOSPACED,
+-                                                              Font.PLAIN, 12);
++        Font f = XToolkit.LazyDefaultFont.value;;
++        FontUIResource dialogPlain = new FontUIResource(f);
++        FontUIResource sansSerifPlain = dialogPlain;
++        FontUIResource monospacedPlain = new FontUIResource(Font.MONOSPACED,
++                                                              Font.PLAIN, f.getSize());
+         ColorUIResource red = new ColorUIResource(Color.red);
+         ColorUIResource black = new ColorUIResource(Color.black);
+         ColorUIResource white = new ColorUIResource(Color.white);
+@@ -289,7 +288,7 @@ class XAWTLookAndFeel extends MotifLookA
+                 "END", "maxScroll"
+             }),
+ 
+-            "ScrollPane.font", dialogPlain12,
++            "ScrollPane.font", dialogPlain,
+             "ScrollPane.background", scrollBarBackground,
+             "ScrollPane.foreground", table.get("controlText"),
+             "ScrollPane.border", null,
+@@ -360,7 +359,7 @@ class XAWTLookAndFeel extends MotifLookA
+             "TextField.selectionForeground", table.get("textHighlightText"),
+             "TextField.background", table.get("window"),
+             "TextField.foreground", table.get("textText"),
+-            "TextField.font", sansSerifPlain12,
++            "TextField.font", sansSerifPlain,
+             "TextField.border", textFieldBorder,
+             "TextField.focusInputMap", fieldInputMap,
+ 
+@@ -371,7 +370,7 @@ class XAWTLookAndFeel extends MotifLookA
+             "PasswordField.selectionForeground", table.get("textHighlightText"),
+             "PasswordField.background", table.get("window"),
+             "PasswordField.foreground", table.get("textText"),
+-            "PasswordField.font", sansSerifPlain12,
++            "PasswordField.font", sansSerifPlain,
+             "PasswordField.border", textFieldBorder,
+             "PasswordField.focusInputMap", passwordInputMap,
+ 
+@@ -382,7 +381,7 @@ class XAWTLookAndFeel extends MotifLookA
+             "TextArea.selectionForeground", table.get("textHighlightText"),
+             "TextArea.background", table.get("window"),
+             "TextArea.foreground", table.get("textText"),
+-            "TextArea.font", monospacedPlain12,
++            "TextArea.font", monospacedPlain,
+             "TextArea.border", marginBorder,
+             "TextArea.focusInputMap", multilineInputMap
+         };
+Index: jdk8u45-b14/jdk/src/solaris/classes/sun/awt/X11/XFileDialogPeer.java
+===================================================================
+--- jdk8u45-b14.orig/jdk/src/solaris/classes/sun/awt/X11/XFileDialogPeer.java
++++ jdk8u45-b14/jdk/src/solaris/classes/sun/awt/X11/XFileDialogPeer.java
+@@ -187,7 +187,7 @@ class XFileDialogPeer extends XDialogPee
+ 
+         // add components to GridBagLayout "gbl"
+ 
+-        Font f = new Font(Font.DIALOG, Font.PLAIN, 12);
++        Font f = XToolkit.LazyDefaultFont.value;
+ 
+         Label label = new Label(pathLabelText);
+         label.setFont(f);
+Index: jdk8u45-b14/jdk/src/solaris/classes/sun/awt/X11/XToolkit.java
+===================================================================
+--- jdk8u45-b14.orig/jdk/src/solaris/classes/sun/awt/X11/XToolkit.java
++++ jdk8u45-b14/jdk/src/solaris/classes/sun/awt/X11/XToolkit.java
+@@ -41,6 +41,10 @@ import java.awt.im.spi.InputMethodDescri
+ import java.awt.image.ColorModel;
+ import java.awt.peer.*;
+ import java.beans.PropertyChangeListener;
++import java.io.File;
++import java.io.FileInputStream;
++import java.io.InputStreamReader;
++import java.io.Reader;
+ import java.security.AccessController;
+ import java.security.PrivilegedAction;
+ import java.util.*;
+@@ -1453,6 +1457,60 @@ public final class XToolkit extends UNIX
+             desktopProperties.put("awt.mouse.numButtons",
+                                   Integer.valueOf(getNumberOfButtons()));
+         }
++        desktopProperties.put("ui.defaultFont", LazyDefaultFont.value);
++    }
++
++    static class LazyDefaultFont {
++        static final Font value = defaultFont();
++
++        private static Font defaultFont() {
++            int size;
++            // TODO maybe add family parsing as well?
++            /*
++             * Configuration hierarchy follows "first found":
++             * 1. system property
++             * 2. user config in ${user.home}/.config/java.properties
++             * 3. system config in /etc/java.properties
++             * 4. legacy config in ${java.home}/jre/lib/swing.properties
++             * 5. hardcoded default.
++             */
++            PrivilegedAction<Integer> readConfigAction = () -> {
++                String key = "ui.defaultFont.size";
++                try {
++                    return Integer.parseInt(System.getProperty(key));
++                } catch (Exception ignore) {
++                }
++                String[] configs = {System.getProperty("user.home")
++                    + File.separatorChar
++                    + ".config"
++                    + File.separatorChar
++                    + "java.properties",
++                    "/etc/java.properties",
++                    System.getProperty("java.home")
++                    + File.separatorChar
++                    + "lib"
++                    + File.separatorChar
++                    + "swing.properties"};
++                for (String config : configs) {
++                    try {
++                        File f = new File(config);
++                        if (f.exists() && f.canRead()) {
++                            // TODO little wasteful to read the whole file,
++                            // but don't want to reimplement Properties functionality here:
++                            try (Reader reader = new InputStreamReader(new FileInputStream(f), "UTF-8")) {
++                                Properties properties = new Properties();
++                                properties.load(reader);
++                                return Integer.parseInt(properties.getProperty(key));
++                            }
++                        }
++                    } catch (Exception ignore) {
++                    }
++                }
++                return Integer.valueOf(9);
++            };
++            size = AccessController.doPrivileged(readConfigAction);
++            return new Font(Font.SANS_SERIF, Font.PLAIN, size);
++        }
+     }
+ 
+     /**
+Index: jdk8u45-b14/jdk/src/solaris/classes/sun/awt/X11/XWindow.java
+===================================================================
+--- jdk8u45-b14.orig/jdk/src/solaris/classes/sun/awt/X11/XWindow.java
++++ jdk8u45-b14/jdk/src/solaris/classes/sun/awt/X11/XWindow.java
+@@ -104,7 +104,7 @@ class XWindow extends XBaseWindow implem
+ 
+     static synchronized Font getDefaultFont() {
+         if (null == defaultFont) {
+-            defaultFont = new Font(Font.DIALOG, Font.PLAIN, 12);
++            defaultFont = XToolkit.LazyDefaultFont.value;
+         }
+         return defaultFont;
+     }
