@@ -1,17 +1,18 @@
 %global hgtag   jdk8u45-b14
 %global update  45
-%global minor   03
+%global minor   beta
 
 # openjdk build system is different,
 # we are building release so there is no useful debuginfo,
 # so disabling debuginfo package creation:
 %global debug_package %{nil}
 
-Name:           tuxjdk
+Name:           tuxjdk-beta
 Version:        8.%{update}.%{minor}
 Release:        0
 URL:            https://github.com/TheIndifferent/tuxjdk
-Summary:        Enhanced Open Java Development Kit for developers on Linux
+Summary:        Beta or early development version of TuxJdk
+Conflicts:      tuxjdk
 #License:        GNU General Public License, version 2, with the Classpath Exception
 License:        GPL-2.0+
 Group:          Development/Languages
@@ -40,11 +41,12 @@ BuildRequires:  libXtst-devel
 BuildRequires:  java-devel
 BuildRequires:  quilt
 BuildRequires:  fdupes
-Source0:        %{name}-%{version}.tar.xz
+Source0:        %{name}.tar.xz
 Source1:        %{hgtag}.tar.xz
 Source13:       %{name}-rpmlintrc
 
 %description
+Beta/TP/early development version of TuxJdk.
 Enhanced Open Java Development Kit for developers on Linux. Contains series of
 patched to OpenJDK to enhance user experience with Java-based and Swing-based
 tools (NetBeans, Idea, Android Studio, etc).
@@ -90,9 +92,6 @@ install -Dm 755 launcher.sh %{buildroot}/usr/local/bin/javap
 install -Dm 755 launcher.sh %{buildroot}/usr/local/bin/javah
 # hadlink launchers as well:
 %fdupes %{buildroot}/usr/local/bin/
-# default font size and antialiasing mode:
-# TODO maybe find a better way to do that?
-cp %{hgtag}/default_swing.properties %{buildroot}/opt/%{name}/jre/lib/swing.properties
 
 %files
 %defattr(644,root,root,755)
@@ -105,11 +104,8 @@ cp %{hgtag}/default_swing.properties %{buildroot}/opt/%{name}/jre/lib/swing.prop
 /usr/local/bin/*
 
 %changelog
-* Wed Jun 10 2015 baiduzhyi.devel@gmail.com
-- Version 03 of tuxjdk:
-  * configurable default font size;
-  * configurable default text antialiasing;
-  * adding default swing.properties file.
+* Sat May 30 2015 baiduzhyi.devel@gmail.com
+- Branching into tuxjdk-beta project.
 * Fri May 29 2015 baiduzhyi.devel@gmail.com
 - Do not merge jre into jdk image.
 * Tue May 26 2015 baiduzhyi.devel@gmail.com
