@@ -82,6 +82,11 @@ rm -rf 'demo' 'sample'
 cp -R * %{buildroot}/opt/%{name}/
 popd
 # hardlinks instead of duplicates:
+
+fdupes -q -p -n -r %{buildroot}/opt/%{name}/
+
+fdupes -r %{buildroot}/opt/%{name}/
+
 %fdupes %{buildroot}/opt/%{name}/
 # copy launchers to /usr/local/bin:
 install -Dm 755 launcher.sh %{buildroot}/usr/local/bin/java
@@ -92,7 +97,10 @@ install -Dm 755 launcher.sh %{buildroot}/usr/local/bin/javah
 %fdupes %{buildroot}/usr/local/bin/
 # default font size and antialiasing mode:
 # TODO maybe find a better way to do that?
-cp %{hgtag}/default_swing.properties %{buildroot}/opt/%{name}/jre/lib/swing.properties
+cp default_swing.properties %{buildroot}/opt/%{name}/jre/lib/swing.properties
+
+%clean
+echo 'noop'
 
 %files
 %defattr(644,root,root,755)
@@ -109,6 +117,8 @@ cp %{hgtag}/default_swing.properties %{buildroot}/opt/%{name}/jre/lib/swing.prop
 - Version 03 of tuxjdk:
   * configurable default font size;
   * configurable default text antialiasing;
+  * disabling some gcc warnings;
+  * compressing the jars;
   * adding default swing.properties file.
 * Fri May 29 2015 baiduzhyi.devel@gmail.com
 - Do not merge jre into jdk image.

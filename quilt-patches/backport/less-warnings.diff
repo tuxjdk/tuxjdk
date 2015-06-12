@@ -1,0 +1,35 @@
+Index: jdk8u45-b14/common/autoconf/generated-configure.sh
+===================================================================
+--- jdk8u45-b14.orig/common/autoconf/generated-configure.sh
++++ jdk8u45-b14/common/autoconf/generated-configure.sh
+@@ -3872,7 +3872,7 @@ fi
+ #CUSTOM_AUTOCONF_INCLUDE
+ 
+ # Do not change or remove the following line, it is needed for consistency checks:
+-DATE_WHEN_GENERATED=1416326200
++DATE_WHEN_GENERATED=1433940523
+ 
+ ###############################################################################
+ #
+@@ -29799,7 +29799,7 @@ fi
+   #
+   case $COMPILER_NAME in
+     gcc )
+-      CCXXFLAGS_JDK="$CCXXFLAGS $CCXXFLAGS_JDK -W -Wall -Wno-unused -Wno-parentheses \
++      CCXXFLAGS_JDK="$CCXXFLAGS $CCXXFLAGS_JDK -W -Wno-sign-compare -Wno-deprecated-declarations\
+       -pipe \
+       -D_GNU_SOURCE -D_REENTRANT -D_LARGEFILE64_SOURCE"
+       case $OPENJDK_TARGET_CPU_ARCH in
+Index: jdk8u45-b14/common/autoconf/toolchain.m4
+===================================================================
+--- jdk8u45-b14.orig/common/autoconf/toolchain.m4
++++ jdk8u45-b14/common/autoconf/toolchain.m4
+@@ -878,7 +878,7 @@ AC_DEFUN_ONCE([TOOLCHAIN_SETUP_COMPILER_
+   #
+   case $COMPILER_NAME in
+     gcc )
+-      CCXXFLAGS_JDK="$CCXXFLAGS $CCXXFLAGS_JDK -W -Wall -Wno-unused -Wno-parentheses \
++      CCXXFLAGS_JDK="$CCXXFLAGS $CCXXFLAGS_JDK -W -Wno-sign-compare -Wno-deprecated-declarations\
+       -pipe \
+       -D_GNU_SOURCE -D_REENTRANT -D_LARGEFILE64_SOURCE"
+       case $OPENJDK_TARGET_CPU_ARCH in
