@@ -73,6 +73,11 @@ bash ../configureBuildOpenjdk.sh
 popd
 
 %install
+# we are building release build,
+# so there should be only minimal debug info,
+# and probably for a good reason:
+export NO_BRP_STRIP_DEBUG='true'
+# creating main dir:
 install -dm 755 %{buildroot}/opt/%{name}
 # processing the image:
 pushd %{hgtag}/build/images/j2sdk-image
@@ -82,11 +87,6 @@ rm -rf 'demo' 'sample'
 cp -R * %{buildroot}/opt/%{name}/
 popd
 # hardlinks instead of duplicates:
-
-fdupes -q -p -n -r %{buildroot}/opt/%{name}/
-
-fdupes -r %{buildroot}/opt/%{name}/
-
 %fdupes %{buildroot}/opt/%{name}/
 # copy launchers to /usr/local/bin:
 install -Dm 755 launcher.sh %{buildroot}/usr/local/bin/java
@@ -98,9 +98,6 @@ install -Dm 755 launcher.sh %{buildroot}/usr/local/bin/javah
 # default font size and antialiasing mode:
 # TODO maybe find a better way to do that?
 cp default_swing.properties %{buildroot}/opt/%{name}/jre/lib/swing.properties
-
-%clean
-echo 'noop'
 
 %files
 %defattr(644,root,root,755)
@@ -119,7 +116,8 @@ echo 'noop'
   * configurable default text antialiasing;
   * disabling some gcc warnings;
   * compressing the jars;
-  * adding default swing.properties file.
+  * adding default swing.properties file;
+  * fixing binaries strip.
 * Fri May 29 2015 baiduzhyi.devel@gmail.com
 - Do not merge jre into jdk image.
 * Tue May 26 2015 baiduzhyi.devel@gmail.com
