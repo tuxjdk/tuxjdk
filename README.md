@@ -34,6 +34,10 @@ make JAVAC_FLAGS=-g images
 ls images/j2sdk-image
 ls images/j2re-image
 ```
+# Versioning
+Verion of tuxjdk is a desperate attempt to put some sense into current java versioning scheme.
+First two numbers reflects major and update version of java for which current patches are adapted.
+Third number is the version of tuxjdk itself, padded with 0 to have a natural sorting.
 
 # Distribution packagers
 
@@ -41,6 +45,25 @@ ls images/j2re-image
 * Project is organized into series of patches, they should not be dependent. Feel free to use them selectively and report any issues.
 
 # Patches list
-```
-TODO
-```
+* **backport** contains patches that may be included in next version of openjdk or those that should but probably will not.
+ * **compare-pointer-with-literal** fixes a mistake in C code, detected by OBS.
+ * **gcc5-fix** fixes the memory leak when compiled with GCC 5.
+ * **giflib5** adds support for giflib5.
+ * **less-warnings** disable some most noisy warnings during the compilation.
+ * **opensuse-link-zlib-as-needed** fixes the linking against system zlib.
+* **tune** contains patches to tune the openjdk default settings or distribution package.
+ * **default-gc** changes the default garbage collector to *ConcMarkSwee*, it greatly lowers the footprint and boosts the performance of NetBeans.
+ * **empty-ctsym** makes the *ct.sym* file completely empty.
+ * **full-srczip** forces the openjdk to pack all the existing sources into *src.zip* file, even from *com.sun* and *sun* packages.
+* **tuxjdk** contains tuxjdk-specific changes, mostly fonts related.
+ * **change-vendor** changes the system properties to identify tuxjdk as vendor.
+ * **add-fontconfig-support** forces reading of system fontconfig settings and rendering the fonts similarly to native toolkits such as Qt and GTK, instead of using hardcoded rendering path.
+ * **configurable-ui-fonts** fixes the typographical point size (upstream openjdk completely ignores the 1/72" standard), adds a possibility to configure defaut font size (hardcoded to 12 in most locations and to 11 in some locations in upstream) and allows to specify desired default font antialiasing if the are any problems detecting one from system (upstream defaults behaviour is not well-defined, and needs constant attention from developers not to forget to set proper RenderingHints).
+
+# Planned features, tasks backlog
+* font size scaling: configure font size to 12 but render as 9, for badly-written apps like jedit.
+* Ubuntu packages
+* document font size settings
+* document font antialiasing settings
+* document font scaling settings
+* document default GC change
