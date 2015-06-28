@@ -2,7 +2,7 @@ This project contains series of patched to OpenJDK to enhance user experience wi
 
 # Download
 Download latest build of tuxjdk for different distributions here:
-[OBS repository](http://download.opensuse.org/repositories/home:/TheIndifferent:/tuxjdk/)<br/>
+[OBS repository](http://download.opensuse.org/repositories/home:/tuxjdk/)<br/>
 It will be installed under `/opt/tuxjdk` and will not touch the alternatives and
 any other java binaries you might have in path.
 
@@ -14,7 +14,7 @@ To apply tuxjdk, do the following steps:
 
 ```bash
 # clone tuxjdk:
-git clone 'https://github.com/TheIndifferent/tuxjdk.git'
+git clone 'https://github.com/tuxjdk/tuxjdk.git'
 # clone openjdk:
 HGTAG='jdk8u45-b14'
 hg clone 'http://hg.openjdk.java.net/jdk8u/jdk8u' $HGTAG
@@ -61,6 +61,10 @@ Third number is the version of tuxjdk itself, padded with 0 to have a natural so
  * **configurable-ui-fonts** fixes the typographical point size (upstream openjdk completely ignores the 1/72" standard), adds a possibility to configure defaut font size (hardcoded to 12 in most locations and to 11 in some locations in upstream) and allows to specify desired default font antialiasing if the are any problems detecting one from system (upstream defaults behaviour is not well-defined, and needs constant attention from developers not to forget to set proper RenderingHints).
 
 # Planned features, tasks backlog
+* change logic of 'awt.useSystemAAFontSettings'.
+* add possibility to specify antialiasing 'grayscale.'
+* change antialiasing 'on' to autodetect between grayscale and lcd.
+* add default settings autudetection app.
 * font size scaling: configure font size to 12 but render as 9, for badly-written apps like jedit.
 * Ubuntu packages
 * document font size settings
