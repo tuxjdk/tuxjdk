@@ -6,6 +6,7 @@
 # we are building release so there is no useful debuginfo,
 # so disabling debuginfo package creation:
 %global debug_package %{nil}
+%define __jar_repack %{nil}
 
 Name:           tuxjdk-beta
 Version:        8.%{update}.%{minor}
@@ -44,6 +45,7 @@ BuildRequires:  fdupes
 Source0:        %{name}.tar.xz
 Source1:        %{hgtag}.tar.xz
 Source13:       %{name}-rpmlintrc
+BuildRoot:      %{name}
 
 %description
 Beta/TP/early development version of TuxJdk.
@@ -62,8 +64,8 @@ Launch scripts for TuxJdk, located under /usr/local/bin, to be the first
 in path but not to conflict with existing jpackage-based packages.
 
 %prep
-%setup -q
-%setup -q -T -D -a 1
+%setup -q -n %{name}
+%setup -q -T -D -a 1 -n %{name}
 ( cd %{hgtag}/jdk/src/share/native/sun/awt && rm -rf giflib )
 ( cd %{hgtag}/jdk/src/share/native/java/util/zip && rm -rf zlib-1.2.8 )
 ( cd %{hgtag} && bash ../applyTuxjdk.sh )
@@ -75,16 +77,21 @@ bash ../configureBuildOpenjdk.sh
 popd
 
 %install
-install -dm 755 %{buildroot}/opt/%{name}
+# we are building release build,
+# so there should be only minimal debug info,
+# and probably for a good reason:
+export NO_BRP_STRIP_DEBUG='true'
+# creating main dir:
+install -dm 755 %{buildroot}/opt/tuxjdk
 # processing the image:
 pushd %{hgtag}/build/images/j2sdk-image
 # deleting useless files:
 rm -rf 'demo' 'sample'
 # copy everything to /opt:
-cp -R * %{buildroot}/opt/%{name}/
+cp -R * %{buildroot}/opt/tuxjdk/
 popd
 # hardlinks instead of duplicates:
-%fdupes %{buildroot}/opt/%{name}/
+%fdupes %{buildroot}/opt/tuxjdk/
 # copy launchers to /usr/local/bin:
 install -Dm 755 launcher.sh %{buildroot}/usr/local/bin/java
 install -Dm 755 launcher.sh %{buildroot}/usr/local/bin/javac
@@ -92,20 +99,31 @@ install -Dm 755 launcher.sh %{buildroot}/usr/local/bin/javap
 install -Dm 755 launcher.sh %{buildroot}/usr/local/bin/javah
 # hadlink launchers as well:
 %fdupes %{buildroot}/usr/local/bin/
+# default font size and antialiasing mode:
+# TODO maybe find a better way to do that?
+cp default_swing.properties %{buildroot}/opt/tuxjdk/jre/lib/swing.properties
 
 %files
 %defattr(644,root,root,755)
-/opt/%{name}
-%attr(755,root,root) /opt/%{name}/bin/*
-%attr(755,root,root) /opt/%{name}/jre/bin/*
+/opt/tuxjdk
+%attr(755,root,root) /opt/tuxjdk/bin/*
+%attr(755,root,root) /opt/tuxjdk/jre/bin/*
 
 %files launchers
 %defattr(755,root,root,755)
 /usr/local/bin/*
 
 %changelog
-* Sat May 30 2015 baiduzhyi.devel@gmail.com
+* Fri Jun 26 2015 baiduzhyi.devel@gmail.com
 - Branching into tuxjdk-beta project.
+* Wed Jun 10 2015 baiduzhyi.devel@gmail.com
+- Version 03 of tuxjdk:
+  * configurable default font size;
+  * configurable default text antialiasing;
+  * disabling some gcc warnings;
+  * compressing the jars;
+  * adding default swing.properties file;
+  * fixing binaries strip.
 * Fri May 29 2015 baiduzhyi.devel@gmail.com
 - Do not merge jre into jdk image.
 * Tue May 26 2015 baiduzhyi.devel@gmail.com
