@@ -61,13 +61,16 @@ Third number is the version of tuxjdk itself, padded with 0 to have a natural so
  * **configurable-ui-fonts** fixes the typographical point size (upstream openjdk completely ignores the 1/72" standard), adds a possibility to configure defaut font size (hardcoded to 12 in most locations and to 11 in some locations in upstream) and allows to specify desired default font antialiasing if the are any problems detecting one from system (upstream defaults behaviour is not well-defined, and needs constant attention from developers not to forget to set proper RenderingHints).
 
 # Planned features, tasks backlog
-* change logic of 'awt.useSystemAAFontSettings'.
-* add possibility to specify antialiasing 'grayscale.'
-* change antialiasing 'on' to autodetect between grayscale and lcd.
-* add default settings autudetection app.
-* font size scaling: configure font size to 12 but render as 9, for badly-written apps like jedit.
-* Ubuntu packages
-* document font size settings
-* document font antialiasing settings
-* document font scaling settings
-* document default GC change
+## 8.45.04
+* [ ] change logic of 'awt.useSystemAAFontSettings'.
+* [ ] add possibility to specify antialiasing 'grayscale.'
+* [ ] change antialiasing 'on' to autodetect between grayscale and lcd.
+* [ ] font size scaling: configure font size to 12 but render as 9, for badly-written apps like jedit.
+
+## General tasks
+* [ ] add default settings autudetection app.
+* [ ] Ubuntu packages
+* [ ] document font size settings
+* [ ] document font antialiasing settings
+* [ ] document font scaling settings
+* [ ] document default GC change
