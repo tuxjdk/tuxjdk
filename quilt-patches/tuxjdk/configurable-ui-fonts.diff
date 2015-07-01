@@ -1591,12 +1591,19 @@ Index: jdk8u45-b14/jdk/src/solaris/classes/sun/awt/X11/XToolkit.java
 ===================================================================
 --- jdk8u45-b14.orig/jdk/src/solaris/classes/sun/awt/X11/XToolkit.java
 +++ jdk8u45-b14/jdk/src/solaris/classes/sun/awt/X11/XToolkit.java
-@@ -1453,6 +1453,8 @@ public final class XToolkit extends UNIX
+@@ -1453,6 +1453,15 @@ public final class XToolkit extends UNIX
              desktopProperties.put("awt.mouse.numButtons",
                                    Integer.valueOf(getNumberOfButtons()));
          }
 +        desktopProperties.put("ui.defaultFont", FontDefaults.font);
 +        desktopProperties.put("ui.defaultFont.antialiasing", FontDefaults.antialiasingHint);
++    }
++
++    @Override
++    protected RenderingHints getDesktopAAHints() {
++        // RenderingHints is mutable class, so we have to return new instance
++        // every time to be on the safe side:
++        return new RenderingHints(RenderingHints.KEY_TEXT_ANTIALIASING, FontDefaults.antialiasingHint);
      }
  
      /**
@@ -1792,3 +1799,118 @@ Index: jdk8u45-b14/jdk/src/solaris/classes/sun/awt/X11/FontDefaults.java
 +    }
 +
 +}
+Index: jdk8u45-b14/jdk/src/share/classes/sun/awt/SunToolkit.java
+===================================================================
+--- jdk8u45-b14.orig/jdk/src/share/classes/sun/awt/SunToolkit.java
++++ jdk8u45-b14/jdk/src/share/classes/sun/awt/SunToolkit.java
+@@ -1715,9 +1715,7 @@ public abstract class SunToolkit extends
+     }
+ 
+     private static boolean checkedSystemAAFontSettings;
+-    private static boolean useSystemAAFontSettings;
+     private static boolean lastExtraCondition = true;
+-    private static RenderingHints desktopFontHints;
+ 
+     /* Since Swing is the reason for this "extra condition" logic its
+      * worth documenting it in some detail.
+@@ -1761,72 +1759,6 @@ public abstract class SunToolkit extends
+         }
+     }
+ 
+-    /* "false", "off", ""default" aren't explicitly tested, they
+-     * just fall through to produce a null return which all are equated to
+-     * "false".
+-     */
+-    private static RenderingHints getDesktopAAHintsByName(String hintname) {
+-        Object aaHint = null;
+-        hintname = hintname.toLowerCase(Locale.ENGLISH);
+-        if (hintname.equals("on")) {
+-            aaHint = VALUE_TEXT_ANTIALIAS_ON;
+-        } else if (hintname.equals("gasp")) {
+-            aaHint = VALUE_TEXT_ANTIALIAS_GASP;
+-        } else if (hintname.equals("lcd") || hintname.equals("lcd_hrgb")) {
+-            aaHint = VALUE_TEXT_ANTIALIAS_LCD_HRGB;
+-        } else if (hintname.equals("lcd_hbgr")) {
+-            aaHint = VALUE_TEXT_ANTIALIAS_LCD_HBGR;
+-        } else if (hintname.equals("lcd_vrgb")) {
+-            aaHint = VALUE_TEXT_ANTIALIAS_LCD_VRGB;
+-        } else if (hintname.equals("lcd_vbgr")) {
+-            aaHint = VALUE_TEXT_ANTIALIAS_LCD_VBGR;
+-        }
+-        if (aaHint != null) {
+-            RenderingHints map = new RenderingHints(null);
+-            map.put(KEY_TEXT_ANTIALIASING, aaHint);
+-            return map;
+-        } else {
+-            return null;
+-        }
+-    }
+-
+-    /* This method determines whether to use the system font settings,
+-     * or ignore them if a L&F has specified they should be ignored, or
+-     * to override both of these with a system property specified value.
+-     * If the toolkit isn't a SunToolkit, (eg may be headless) then that
+-     * system property isn't applied as desktop properties are considered
+-     * to be inapplicable in that case. In that headless case although
+-     * this method will return "true" the toolkit will return a null map.
+-     */
+-    private static boolean useSystemAAFontSettings() {
+-        if (!checkedSystemAAFontSettings) {
+-            useSystemAAFontSettings = true; /* initially set this true */
+-            String systemAAFonts = null;
+-            Toolkit tk = Toolkit.getDefaultToolkit();
+-            if (tk instanceof SunToolkit) {
+-                systemAAFonts =
+-                    AccessController.doPrivileged(
+-                         new GetPropertyAction("awt.useSystemAAFontSettings"));
+-            }
+-            if (systemAAFonts != null) {
+-                useSystemAAFontSettings =
+-                    Boolean.valueOf(systemAAFonts).booleanValue();
+-                /* If it is anything other than "true", then it may be
+-                 * a hint name , or it may be "off, "default", etc.
+-                 */
+-                if (!useSystemAAFontSettings) {
+-                    desktopFontHints = getDesktopAAHintsByName(systemAAFonts);
+-                }
+-            }
+-            /* If its still true, apply the extra condition */
+-            if (useSystemAAFontSettings) {
+-                 useSystemAAFontSettings = lastExtraCondition;
+-            }
+-            checkedSystemAAFontSettings = true;
+-        }
+-        return useSystemAAFontSettings;
+-    }
+-
+     /* A variable defined for the convenience of JDK code */
+     public static final String DESKTOPFONTHINTS = "awt.font.desktophints";
+ 
+@@ -1842,22 +1774,12 @@ public abstract class SunToolkit extends
+      * to a helper class.
+      */
+     public static RenderingHints getDesktopFontHints() {
+-        if (useSystemAAFontSettings()) {
+-             Toolkit tk = Toolkit.getDefaultToolkit();
+-             if (tk instanceof SunToolkit) {
+-                 Object map = ((SunToolkit)tk).getDesktopAAHints();
+-                 return (RenderingHints)map;
+-             } else { /* Headless Toolkit */
+-                 return null;
+-             }
+-        } else if (desktopFontHints != null) {
+-            /* cloning not necessary as the return value is cloned later, but
+-             * its harmless.
+-             */
+-            return (RenderingHints)(desktopFontHints.clone());
+-        } else {
+-            return null;
++        Toolkit tk = Toolkit.getDefaultToolkit();
++        if (tk instanceof SunToolkit) {
++            Object map = ((SunToolkit) tk).getDesktopAAHints();
++            return (RenderingHints) map;
+         }
++        return null;
+     }
+ 
+ 

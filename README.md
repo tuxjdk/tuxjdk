@@ -62,10 +62,12 @@ Third number is the version of tuxjdk itself, padded with 0 to have a natural so
 
 # Planned features, tasks backlog
 ## 8.45.04
-* [ ] change logic of 'awt.useSystemAAFontSettings'.
+* [x] change logic of 'awt.useSystemAAFontSettings'.
 * [ ] add possibility to specify antialiasing 'grayscale.'
 * [ ] change antialiasing 'on' to autodetect between grayscale and lcd.
 * [ ] font size scaling: configure font size to 12 but render as 9, for badly-written apps like jedit.
+* [ ] split single huge patch into series of smaller patches.
+* [ ] check fontconfig support for memory leaks.
 
 ## General tasks
 * [ ] add default settings autudetection app.
