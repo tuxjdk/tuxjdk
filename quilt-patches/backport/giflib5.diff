@@ -1,7 +1,7 @@
-Index: jdk8u40-b25/jdk/src/share/native/sun/awt/splashscreen/splashscreen_gif.c
+Index: jdk8u51-b16/jdk/src/share/native/sun/awt/splashscreen/splashscreen_gif.c
 ===================================================================
---- jdk8u40-b25.orig/jdk/src/share/native/sun/awt/splashscreen/splashscreen_gif.c
-+++ jdk8u40-b25/jdk/src/share/native/sun/awt/splashscreen/splashscreen_gif.c
+--- jdk8u51-b16.orig/jdk/src/share/native/sun/awt/splashscreen/splashscreen_gif.c
++++ jdk8u51-b16/jdk/src/share/native/sun/awt/splashscreen/splashscreen_gif.c
 @@ -309,8 +309,14 @@ SplashDecodeGif(Splash * splash, GifFile
  
      free(pBitmapBits);

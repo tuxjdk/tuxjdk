@@ -1,7 +1,7 @@
-Index: jdk8u45-b14/jdk/make/lib/Awt2dLibraries.gmk
+Index: jdk8u51-b16/jdk/make/lib/Awt2dLibraries.gmk
 ===================================================================
---- jdk8u45-b14.orig/jdk/make/lib/Awt2dLibraries.gmk
-+++ jdk8u45-b14/jdk/make/lib/Awt2dLibraries.gmk
+--- jdk8u51-b16.orig/jdk/make/lib/Awt2dLibraries.gmk
++++ jdk8u51-b16/jdk/make/lib/Awt2dLibraries.gmk
 @@ -826,7 +826,7 @@ $(eval $(call SetupNativeCompilation,BUI
      LDFLAGS := $(subst -Xlinker -z -Xlinker defs,,$(LDFLAGS_JDKLIB)) $(LDFLAGS_CXX_JDK) \
          $(call SET_SHARED_LIBRARY_ORIGIN), \
@@ -11,10 +11,10 @@ Index: jdk8u45-b14/jdk/make/lib/Awt2dLibraries.gmk
      LDFLAGS_SUFFIX_solaris := -lawt -lawt_xawt -lc $(LIBM) $(LIBCXX) -ljava -ljvm, \
      LDFLAGS_SUFFIX_aix := -lawt -lawt_xawt $(LIBM) $(LIBCXX) -ljava -ljvm,\
      LDFLAGS_SUFFIX_macosx := -lawt $(LIBM) $(LIBCXX) -undefined dynamic_lookup \
-Index: jdk8u45-b14/jdk/src/share/native/sun/font/freetypeScaler.c
+Index: jdk8u51-b16/jdk/src/share/native/sun/font/freetypeScaler.c
 ===================================================================
---- jdk8u45-b14.orig/jdk/src/share/native/sun/font/freetypeScaler.c
-+++ jdk8u45-b14/jdk/src/share/native/sun/font/freetypeScaler.c
+--- jdk8u51-b16.orig/jdk/src/share/native/sun/font/freetypeScaler.c
++++ jdk8u51-b16/jdk/src/share/native/sun/font/freetypeScaler.c
 @@ -38,6 +38,10 @@
  #include FT_SIZES_H
  #include FT_OUTLINE_H
