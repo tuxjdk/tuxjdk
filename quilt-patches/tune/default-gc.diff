@@ -1,7 +1,7 @@
-Index: jdk8u40-b25/hotspot/src/share/vm/runtime/arguments.cpp
+Index: jdk8u51-b16/hotspot/src/share/vm/runtime/arguments.cpp
 ===================================================================
---- jdk8u40-b25.orig/hotspot/src/share/vm/runtime/arguments.cpp
-+++ jdk8u40-b25/hotspot/src/share/vm/runtime/arguments.cpp
+--- jdk8u51-b16.orig/hotspot/src/share/vm/runtime/arguments.cpp
++++ jdk8u51-b16/hotspot/src/share/vm/runtime/arguments.cpp
 @@ -1562,11 +1562,7 @@ void Arguments::set_conservative_max_hea
  
  void Arguments::select_gc_ergonomically() {

@@ -7,7 +7,7 @@ readonly TAR="$( which tar 2>/dev/null )"
 if [[ -n "$2" ]] ; then
   readonly UPSTREAM="$2"
 else
-  readonly UPSTREAM='https://github.com/TheIndifferent/tuxjdk.git'
+  readonly UPSTREAM='https://github.com/tuxjdk/tuxjdk.git'
 fi
 
 if [[ -z $TAG ]] ; then

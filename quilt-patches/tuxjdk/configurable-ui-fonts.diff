@@ -1,7 +1,7 @@
-Index: jdk8u45-b14/jdk/src/share/classes/com/sun/java/swing/plaf/gtk/PangoFonts.java
+Index: jdk8u51-b16/jdk/src/share/classes/com/sun/java/swing/plaf/gtk/PangoFonts.java
 ===================================================================
---- jdk8u45-b14.orig/jdk/src/share/classes/com/sun/java/swing/plaf/gtk/PangoFonts.java
-+++ jdk8u45-b14/jdk/src/share/classes/com/sun/java/swing/plaf/gtk/PangoFonts.java
+--- jdk8u51-b16.orig/jdk/src/share/classes/com/sun/java/swing/plaf/gtk/PangoFonts.java
++++ jdk8u51-b16/jdk/src/share/classes/com/sun/java/swing/plaf/gtk/PangoFonts.java
 @@ -159,32 +159,6 @@ class PangoFonts {
           * equivalent sizes. If such a change were ever to be made in GTK
           * we would need to update for that.
@@ -49,10 +49,10 @@ Index: jdk8u45-b14/jdk/src/share/classes/com/sun/java/swing/plaf/gtk/PangoFonts.
              FontUIResource fuir = new FontUIResource(font);
              return FontUtilities.getCompositeFontUIResource(fuir);
          }
-Index: jdk8u45-b14/jdk/src/share/classes/com/sun/java/swing/plaf/motif/MotifDesktopIconUI.java
+Index: jdk8u51-b16/jdk/src/share/classes/com/sun/java/swing/plaf/motif/MotifDesktopIconUI.java
 ===================================================================
---- jdk8u45-b14.orig/jdk/src/share/classes/com/sun/java/swing/plaf/motif/MotifDesktopIconUI.java
-+++ jdk8u45-b14/jdk/src/share/classes/com/sun/java/swing/plaf/motif/MotifDesktopIconUI.java
+--- jdk8u51-b16.orig/jdk/src/share/classes/com/sun/java/swing/plaf/motif/MotifDesktopIconUI.java
++++ jdk8u51-b16/jdk/src/share/classes/com/sun/java/swing/plaf/motif/MotifDesktopIconUI.java
 @@ -62,8 +62,15 @@ public class MotifDesktopIconUI extends
      final static int LABEL_HEIGHT = 18;
      final static int LABEL_DIVIDER = 4;    // padding between icon and label
@@ -71,10 +71,10 @@ Index: jdk8u45-b14/jdk/src/share/classes/com/sun/java/swing/plaf/motif/MotifDesk
  
      public static ComponentUI createUI(JComponent c)    {
          return new MotifDesktopIconUI();
-Index: jdk8u45-b14/jdk/src/share/classes/com/sun/java/swing/plaf/motif/MotifLookAndFeel.java
+Index: jdk8u51-b16/jdk/src/share/classes/com/sun/java/swing/plaf/motif/MotifLookAndFeel.java
 ===================================================================
---- jdk8u45-b14.orig/jdk/src/share/classes/com/sun/java/swing/plaf/motif/MotifLookAndFeel.java
-+++ jdk8u45-b14/jdk/src/share/classes/com/sun/java/swing/plaf/motif/MotifLookAndFeel.java
+--- jdk8u51-b16.orig/jdk/src/share/classes/com/sun/java/swing/plaf/motif/MotifLookAndFeel.java
++++ jdk8u51-b16/jdk/src/share/classes/com/sun/java/swing/plaf/motif/MotifLookAndFeel.java
 @@ -28,6 +28,7 @@ package com.sun.java.swing.plaf.motif;
  import java.awt.Color;
  import java.awt.Font;
@@ -275,10 +275,10 @@ Index: jdk8u45-b14/jdk/src/share/classes/com/sun/java/swing/plaf/motif/MotifLook
              "EditorPane.border", marginBorder,
              "EditorPane.focusInputMap", multilineInputMap,
  
-Index: jdk8u45-b14/jdk/src/share/classes/java/awt/Font.java
+Index: jdk8u51-b16/jdk/src/share/classes/java/awt/Font.java
 ===================================================================
---- jdk8u45-b14.orig/jdk/src/share/classes/java/awt/Font.java
-+++ jdk8u45-b14/jdk/src/share/classes/java/awt/Font.java
+--- jdk8u51-b16.orig/jdk/src/share/classes/java/awt/Font.java
++++ jdk8u51-b16/jdk/src/share/classes/java/awt/Font.java
 @@ -1466,9 +1466,9 @@ public class Font implements java.io.Ser
       * so the font name may not be properly recognised.
       *
@@ -318,10 +318,10 @@ Index: jdk8u45-b14/jdk/src/share/classes/java/awt/Font.java
                  }
              } catch (NumberFormatException e) {
                  /* It wasn't a valid size, if we didn't also find the
-Index: jdk8u45-b14/jdk/src/share/classes/java/awt/font/FontRenderContext.java
+Index: jdk8u51-b16/jdk/src/share/classes/java/awt/font/FontRenderContext.java
 ===================================================================
---- jdk8u45-b14.orig/jdk/src/share/classes/java/awt/font/FontRenderContext.java
-+++ jdk8u45-b14/jdk/src/share/classes/java/awt/font/FontRenderContext.java
+--- jdk8u51-b16.orig/jdk/src/share/classes/java/awt/font/FontRenderContext.java
++++ jdk8u51-b16/jdk/src/share/classes/java/awt/font/FontRenderContext.java
 @@ -30,6 +30,7 @@
  package java.awt.font;
  
@@ -359,10 +359,10 @@ Index: jdk8u45-b14/jdk/src/share/classes/java/awt/font/FontRenderContext.java
          fmHintValue = VALUE_FRACTIONALMETRICS_DEFAULT;
          defaulting = true;
      }
-Index: jdk8u45-b14/jdk/src/share/classes/javax/swing/UIManager.java
+Index: jdk8u51-b16/jdk/src/share/classes/javax/swing/UIManager.java
 ===================================================================
---- jdk8u45-b14.orig/jdk/src/share/classes/javax/swing/UIManager.java
-+++ jdk8u45-b14/jdk/src/share/classes/javax/swing/UIManager.java
+--- jdk8u51-b16.orig/jdk/src/share/classes/javax/swing/UIManager.java
++++ jdk8u51-b16/jdk/src/share/classes/javax/swing/UIManager.java
 @@ -59,6 +59,7 @@ import sun.security.action.GetPropertyAc
  import sun.swing.SwingUtilities2;
  import java.lang.reflect.Method;
@@ -394,10 +394,10 @@ Index: jdk8u45-b14/jdk/src/share/classes/javax/swing/UIManager.java
      }
  
  
-Index: jdk8u45-b14/jdk/src/share/classes/javax/swing/border/TitledBorder.java
+Index: jdk8u51-b16/jdk/src/share/classes/javax/swing/border/TitledBorder.java
 ===================================================================
---- jdk8u45-b14.orig/jdk/src/share/classes/javax/swing/border/TitledBorder.java
-+++ jdk8u45-b14/jdk/src/share/classes/javax/swing/border/TitledBorder.java
+--- jdk8u51-b16.orig/jdk/src/share/classes/javax/swing/border/TitledBorder.java
++++ jdk8u51-b16/jdk/src/share/classes/javax/swing/border/TitledBorder.java
 @@ -687,7 +687,7 @@ public class TitledBorder extends Abstra
                  return font;
              }
@@ -407,10 +407,10 @@ Index: jdk8u45-b14/jdk/src/share/classes/javax/swing/border/TitledBorder.java
      }
  
      private Color getColor(Component c) {
-Index: jdk8u45-b14/jdk/src/share/classes/javax/swing/colorchooser/DefaultPreviewPanel.java
+Index: jdk8u51-b16/jdk/src/share/classes/javax/swing/colorchooser/DefaultPreviewPanel.java
 ===================================================================
---- jdk8u45-b14.orig/jdk/src/share/classes/javax/swing/colorchooser/DefaultPreviewPanel.java
-+++ jdk8u45-b14/jdk/src/share/classes/javax/swing/colorchooser/DefaultPreviewPanel.java
+--- jdk8u51-b16.orig/jdk/src/share/classes/javax/swing/colorchooser/DefaultPreviewPanel.java
++++ jdk8u51-b16/jdk/src/share/classes/javax/swing/colorchooser/DefaultPreviewPanel.java
 @@ -61,7 +61,7 @@ class DefaultPreviewPanel extends JPanel
  
  
@@ -420,10 +420,10 @@ Index: jdk8u45-b14/jdk/src/share/classes/javax/swing/colorchooser/DefaultPreview
      private String sampleText;
  
      private int swatchWidth = 50;
-Index: jdk8u45-b14/jdk/src/share/classes/javax/swing/plaf/basic/BasicLookAndFeel.java
+Index: jdk8u51-b16/jdk/src/share/classes/javax/swing/plaf/basic/BasicLookAndFeel.java
 ===================================================================
---- jdk8u45-b14.orig/jdk/src/share/classes/javax/swing/plaf/basic/BasicLookAndFeel.java
-+++ jdk8u45-b14/jdk/src/share/classes/javax/swing/plaf/basic/BasicLookAndFeel.java
+--- jdk8u51-b16.orig/jdk/src/share/classes/javax/swing/plaf/basic/BasicLookAndFeel.java
++++ jdk8u51-b16/jdk/src/share/classes/javax/swing/plaf/basic/BasicLookAndFeel.java
 @@ -459,29 +459,31 @@ public abstract class BasicLookAndFeel e
          Long oneThousand = new Long(1000);
  
@@ -794,10 +794,10 @@ Index: jdk8u45-b14/jdk/src/share/classes/javax/swing/plaf/basic/BasicLookAndFeel
              "Tree.background", window,
              "Tree.foreground", textText,
              "Tree.hash", gray,
-Index: jdk8u45-b14/jdk/src/share/classes/javax/swing/plaf/metal/DefaultMetalTheme.java
+Index: jdk8u51-b16/jdk/src/share/classes/javax/swing/plaf/metal/DefaultMetalTheme.java
 ===================================================================
---- jdk8u45-b14.orig/jdk/src/share/classes/javax/swing/plaf/metal/DefaultMetalTheme.java
-+++ jdk8u45-b14/jdk/src/share/classes/javax/swing/plaf/metal/DefaultMetalTheme.java
+--- jdk8u51-b16.orig/jdk/src/share/classes/javax/swing/plaf/metal/DefaultMetalTheme.java
++++ jdk8u51-b16/jdk/src/share/classes/javax/swing/plaf/metal/DefaultMetalTheme.java
 @@ -89,106 +89,29 @@ import sun.swing.SwingUtilities2;
   * @author Steve Wilson
   */
@@ -1042,10 +1042,10 @@ Index: jdk8u45-b14/jdk/src/share/classes/javax/swing/plaf/metal/DefaultMetalThem
          }
      }
  }
-Index: jdk8u45-b14/jdk/src/share/classes/javax/swing/plaf/nimbus/Defaults.template
+Index: jdk8u51-b16/jdk/src/share/classes/javax/swing/plaf/nimbus/Defaults.template
 ===================================================================
---- jdk8u45-b14.orig/jdk/src/share/classes/javax/swing/plaf/nimbus/Defaults.template
-+++ jdk8u45-b14/jdk/src/share/classes/javax/swing/plaf/nimbus/Defaults.template
+--- jdk8u51-b16.orig/jdk/src/share/classes/javax/swing/plaf/nimbus/Defaults.template
++++ jdk8u51-b16/jdk/src/share/classes/javax/swing/plaf/nimbus/Defaults.template
 @@ -46,6 +46,7 @@ import java.awt.Dimension;
  import java.awt.Font;
  import java.awt.Graphics2D;
@@ -1079,10 +1079,10 @@ Index: jdk8u45-b14/jdk/src/share/classes/javax/swing/plaf/nimbus/Defaults.templa
          defaultStyle = new DefaultSynthStyle();
          defaultStyle.setFont(defaultFont);
  
-Index: jdk8u45-b14/jdk/src/share/classes/javax/swing/text/html/StyleSheet.java
+Index: jdk8u51-b16/jdk/src/share/classes/javax/swing/text/html/StyleSheet.java
 ===================================================================
---- jdk8u45-b14.orig/jdk/src/share/classes/javax/swing/text/html/StyleSheet.java
-+++ jdk8u45-b14/jdk/src/share/classes/javax/swing/text/html/StyleSheet.java
+--- jdk8u51-b16.orig/jdk/src/share/classes/javax/swing/text/html/StyleSheet.java
++++ jdk8u51-b16/jdk/src/share/classes/javax/swing/text/html/StyleSheet.java
 @@ -881,7 +881,7 @@ public class StyleSheet extends StyleCon
       * Fetches the font to use for the given set of attributes.
       */
@@ -1124,10 +1124,10 @@ Index: jdk8u45-b14/jdk/src/share/classes/javax/swing/text/html/StyleSheet.java
  
      private int sizeMap[] = sizeMapDefault;
      private boolean w3cLengthUnits = false;
-Index: jdk8u45-b14/jdk/src/share/classes/javax/swing/text/html/default.css
+Index: jdk8u51-b16/jdk/src/share/classes/javax/swing/text/html/default.css
 ===================================================================
---- jdk8u45-b14.orig/jdk/src/share/classes/javax/swing/text/html/default.css
-+++ jdk8u45-b14/jdk/src/share/classes/javax/swing/text/html/default.css
+--- jdk8u51-b16.orig/jdk/src/share/classes/javax/swing/text/html/default.css
++++ jdk8u51-b16/jdk/src/share/classes/javax/swing/text/html/default.css
 @@ -26,8 +26,8 @@
  /*
   */
@@ -1172,10 +1172,10 @@ Index: jdk8u45-b14/jdk/src/share/classes/javax/swing/text/html/default.css
  
  pre p {margin-top: 0}
  
-Index: jdk8u45-b14/jdk/src/share/classes/sun/awt/SunHints.java
+Index: jdk8u51-b16/jdk/src/share/classes/sun/awt/SunHints.java
 ===================================================================
---- jdk8u45-b14.orig/jdk/src/share/classes/sun/awt/SunHints.java
-+++ jdk8u45-b14/jdk/src/share/classes/sun/awt/SunHints.java
+--- jdk8u51-b16.orig/jdk/src/share/classes/sun/awt/SunHints.java
++++ jdk8u51-b16/jdk/src/share/classes/sun/awt/SunHints.java
 @@ -113,6 +113,11 @@ public class SunHints {
          }
  
@@ -1188,10 +1188,10 @@ Index: jdk8u45-b14/jdk/src/share/classes/sun/awt/SunHints.java
              return ValueObjects[keyindex][valueindex];
          }
  
-Index: jdk8u45-b14/jdk/src/share/classes/sun/awt/image/OffScreenImage.java
+Index: jdk8u51-b16/jdk/src/share/classes/sun/awt/image/OffScreenImage.java
 ===================================================================
---- jdk8u45-b14.orig/jdk/src/share/classes/sun/awt/image/OffScreenImage.java
-+++ jdk8u45-b14/jdk/src/share/classes/sun/awt/image/OffScreenImage.java
+--- jdk8u51-b16.orig/jdk/src/share/classes/sun/awt/image/OffScreenImage.java
++++ jdk8u51-b16/jdk/src/share/classes/sun/awt/image/OffScreenImage.java
 @@ -32,6 +32,7 @@ import java.awt.Font;
  import java.awt.Graphics;
  import java.awt.Graphics2D;
@@ -1214,10 +1214,10 @@ Index: jdk8u45-b14/jdk/src/share/classes/sun/awt/image/OffScreenImage.java
              }
              font = defaultFont;
          }
-Index: jdk8u45-b14/jdk/src/share/classes/sun/awt/image/SunVolatileImage.java
+Index: jdk8u51-b16/jdk/src/share/classes/sun/awt/image/SunVolatileImage.java
 ===================================================================
---- jdk8u45-b14.orig/jdk/src/share/classes/sun/awt/image/SunVolatileImage.java
-+++ jdk8u45-b14/jdk/src/share/classes/sun/awt/image/SunVolatileImage.java
+--- jdk8u51-b16.orig/jdk/src/share/classes/sun/awt/image/SunVolatileImage.java
++++ jdk8u51-b16/jdk/src/share/classes/sun/awt/image/SunVolatileImage.java
 @@ -32,6 +32,7 @@ import java.awt.Font;
  import java.awt.Graphics2D;
  import java.awt.GraphicsConfiguration;
@@ -1248,10 +1248,10 @@ Index: jdk8u45-b14/jdk/src/share/classes/sun/awt/image/SunVolatileImage.java
              }
              return defaultFont;
          }
-Index: jdk8u45-b14/jdk/src/share/classes/sun/font/FreetypeFontScaler.java
+Index: jdk8u51-b16/jdk/src/share/classes/sun/font/FreetypeFontScaler.java
 ===================================================================
---- jdk8u45-b14.orig/jdk/src/share/classes/sun/font/FreetypeFontScaler.java
-+++ jdk8u45-b14/jdk/src/share/classes/sun/font/FreetypeFontScaler.java
+--- jdk8u51-b16.orig/jdk/src/share/classes/sun/font/FreetypeFontScaler.java
++++ jdk8u51-b16/jdk/src/share/classes/sun/font/FreetypeFontScaler.java
 @@ -24,12 +24,12 @@
   */
  
@@ -1292,10 +1292,10 @@ Index: jdk8u45-b14/jdk/src/share/classes/sun/font/FreetypeFontScaler.java
  
      /* Freetype scaler context does not contain any pointers that
         has to be invalidated if native scaler is bad */
-Index: jdk8u45-b14/jdk/src/share/classes/sun/java2d/SunGraphics2D.java
+Index: jdk8u51-b16/jdk/src/share/classes/sun/java2d/SunGraphics2D.java
 ===================================================================
---- jdk8u45-b14.orig/jdk/src/share/classes/sun/java2d/SunGraphics2D.java
-+++ jdk8u45-b14/jdk/src/share/classes/sun/java2d/SunGraphics2D.java
+--- jdk8u51-b16.orig/jdk/src/share/classes/sun/java2d/SunGraphics2D.java
++++ jdk8u51-b16/jdk/src/share/classes/sun/java2d/SunGraphics2D.java
 @@ -210,8 +210,6 @@ public final class SunGraphics2D
  
      protected static final Stroke defaultStroke = new BasicStroke();
@@ -1350,10 +1350,10 @@ Index: jdk8u45-b14/jdk/src/share/classes/sun/java2d/SunGraphics2D.java
          fractionalMetricsHint = SunHints.INTVAL_FRACTIONALMETRICS_OFF;
          lcdTextContrast = lcdTextContrastDefaultValue;
          interpolationHint = -1;
-Index: jdk8u45-b14/jdk/src/share/classes/sun/java2d/SunGraphicsEnvironment.java
+Index: jdk8u51-b16/jdk/src/share/classes/sun/java2d/SunGraphicsEnvironment.java
 ===================================================================
---- jdk8u45-b14.orig/jdk/src/share/classes/sun/java2d/SunGraphicsEnvironment.java
-+++ jdk8u45-b14/jdk/src/share/classes/sun/java2d/SunGraphicsEnvironment.java
+--- jdk8u51-b16.orig/jdk/src/share/classes/sun/java2d/SunGraphicsEnvironment.java
++++ jdk8u51-b16/jdk/src/share/classes/sun/java2d/SunGraphicsEnvironment.java
 @@ -60,6 +60,7 @@ import sun.awt.AppContext;
  import sun.awt.DisplayChangedListener;
  import sun.awt.FontConfiguration;
@@ -1414,10 +1414,10 @@ Index: jdk8u45-b14/jdk/src/share/classes/sun/java2d/SunGraphicsEnvironment.java
      }
  
      public static FontManagerForSGE getFontManagerForSGE() {
-Index: jdk8u45-b14/jdk/src/share/classes/sun/java2d/SurfaceData.java
+Index: jdk8u51-b16/jdk/src/share/classes/sun/java2d/SurfaceData.java
 ===================================================================
---- jdk8u45-b14.orig/jdk/src/share/classes/sun/java2d/SurfaceData.java
-+++ jdk8u45-b14/jdk/src/share/classes/sun/java2d/SurfaceData.java
+--- jdk8u51-b16.orig/jdk/src/share/classes/sun/java2d/SurfaceData.java
++++ jdk8u51-b16/jdk/src/share/classes/sun/java2d/SurfaceData.java
 @@ -504,8 +504,7 @@ public abstract class SurfaceData
          // For now the answer can only be true in the following cases:
          if (sg2d.compositeState <= SunGraphics2D.COMP_ISCOPY &&
@@ -1428,10 +1428,10 @@ Index: jdk8u45-b14/jdk/src/share/classes/sun/java2d/SurfaceData.java
          {
              if (haveLCDLoop == LOOP_UNKNOWN) {
                  DrawGlyphListLCD loop =
-Index: jdk8u45-b14/jdk/src/share/classes/sun/java2d/loops/BlitBg.java
+Index: jdk8u51-b16/jdk/src/share/classes/sun/java2d/loops/BlitBg.java
 ===================================================================
---- jdk8u45-b14.orig/jdk/src/share/classes/sun/java2d/loops/BlitBg.java
-+++ jdk8u45-b14/jdk/src/share/classes/sun/java2d/loops/BlitBg.java
+--- jdk8u51-b16.orig/jdk/src/share/classes/sun/java2d/loops/BlitBg.java
++++ jdk8u51-b16/jdk/src/share/classes/sun/java2d/loops/BlitBg.java
 @@ -29,6 +29,7 @@ import java.awt.Font;
  import java.awt.Color;
  import java.awt.Composite;
@@ -1456,10 +1456,10 @@ Index: jdk8u45-b14/jdk/src/share/classes/sun/java2d/loops/BlitBg.java
      }
  
      public GraphicsPrimitive traceWrap() {
-Index: jdk8u45-b14/jdk/src/share/native/sun/font/freetypeScaler.c
+Index: jdk8u51-b16/jdk/src/share/native/sun/font/freetypeScaler.c
 ===================================================================
---- jdk8u45-b14.orig/jdk/src/share/native/sun/font/freetypeScaler.c
-+++ jdk8u45-b14/jdk/src/share/native/sun/font/freetypeScaler.c
+--- jdk8u51-b16.orig/jdk/src/share/native/sun/font/freetypeScaler.c
++++ jdk8u51-b16/jdk/src/share/native/sun/font/freetypeScaler.c
 @@ -92,6 +92,7 @@ typedef struct FTScalerContext {
      int        renderFlags;   /* configuration specific to particular engine */
      int        pathType;
@@ -1503,10 +1503,10 @@ Index: jdk8u45-b14/jdk/src/share/native/sun/font/freetypeScaler.c
  
          if (errCode == 0) {
              errCode = FT_Activate_Size(scalerInfo->face->size);
-Index: jdk8u45-b14/jdk/src/solaris/classes/sun/awt/X11/InfoWindow.java
+Index: jdk8u51-b16/jdk/src/solaris/classes/sun/awt/X11/InfoWindow.java
 ===================================================================
---- jdk8u45-b14.orig/jdk/src/solaris/classes/sun/awt/X11/InfoWindow.java
-+++ jdk8u45-b14/jdk/src/solaris/classes/sun/awt/X11/InfoWindow.java
+--- jdk8u51-b16.orig/jdk/src/solaris/classes/sun/awt/X11/InfoWindow.java
++++ jdk8u51-b16/jdk/src/solaris/classes/sun/awt/X11/InfoWindow.java
 @@ -257,7 +257,7 @@ public abstract class InfoWindow extends
          private final static int BALLOON_ICON_HEIGHT = 32;
          private final static int BALLOON_TRAY_ICON_INDENT = 0;
@@ -1516,10 +1516,10 @@ Index: jdk8u45-b14/jdk/src/solaris/classes/sun/awt/X11/InfoWindow.java
  
          private Panel mainPanel = new Panel();
          private Panel captionPanel = new Panel();
-Index: jdk8u45-b14/jdk/src/solaris/classes/sun/awt/X11/XAWTLookAndFeel.java
+Index: jdk8u51-b16/jdk/src/solaris/classes/sun/awt/X11/XAWTLookAndFeel.java
 ===================================================================
---- jdk8u45-b14.orig/jdk/src/solaris/classes/sun/awt/X11/XAWTLookAndFeel.java
-+++ jdk8u45-b14/jdk/src/solaris/classes/sun/awt/X11/XAWTLookAndFeel.java
+--- jdk8u51-b16.orig/jdk/src/solaris/classes/sun/awt/X11/XAWTLookAndFeel.java
++++ jdk8u51-b16/jdk/src/solaris/classes/sun/awt/X11/XAWTLookAndFeel.java
 @@ -85,12 +85,11 @@ class XAWTLookAndFeel extends MotifLookA
      protected void initComponentDefaults(UIDefaults table) {
          super.initComponentDefaults(table);
@@ -1574,10 +1574,10 @@ Index: jdk8u45-b14/jdk/src/solaris/classes/sun/awt/X11/XAWTLookAndFeel.java
              "TextArea.border", marginBorder,
              "TextArea.focusInputMap", multilineInputMap
          };
-Index: jdk8u45-b14/jdk/src/solaris/classes/sun/awt/X11/XFileDialogPeer.java
+Index: jdk8u51-b16/jdk/src/solaris/classes/sun/awt/X11/XFileDialogPeer.java
 ===================================================================
---- jdk8u45-b14.orig/jdk/src/solaris/classes/sun/awt/X11/XFileDialogPeer.java
-+++ jdk8u45-b14/jdk/src/solaris/classes/sun/awt/X11/XFileDialogPeer.java
+--- jdk8u51-b16.orig/jdk/src/solaris/classes/sun/awt/X11/XFileDialogPeer.java
++++ jdk8u51-b16/jdk/src/solaris/classes/sun/awt/X11/XFileDialogPeer.java
 @@ -187,7 +187,7 @@ class XFileDialogPeer extends XDialogPee
  
          // add components to GridBagLayout "gbl"
@@ -1587,23 +1587,30 @@ Index: jdk8u45-b14/jdk/src/solaris/classes/sun/awt/X11/XFileDialogPeer.java
  
          Label label = new Label(pathLabelText);
          label.setFont(f);
-Index: jdk8u45-b14/jdk/src/solaris/classes/sun/awt/X11/XToolkit.java
+Index: jdk8u51-b16/jdk/src/solaris/classes/sun/awt/X11/XToolkit.java
 ===================================================================
---- jdk8u45-b14.orig/jdk/src/solaris/classes/sun/awt/X11/XToolkit.java
-+++ jdk8u45-b14/jdk/src/solaris/classes/sun/awt/X11/XToolkit.java
-@@ -1453,6 +1453,8 @@ public final class XToolkit extends UNIX
+--- jdk8u51-b16.orig/jdk/src/solaris/classes/sun/awt/X11/XToolkit.java
++++ jdk8u51-b16/jdk/src/solaris/classes/sun/awt/X11/XToolkit.java
+@@ -1453,6 +1453,15 @@ public final class XToolkit extends UNIX
              desktopProperties.put("awt.mouse.numButtons",
                                    Integer.valueOf(getNumberOfButtons()));
          }
 +        desktopProperties.put("ui.defaultFont", FontDefaults.font);
 +        desktopProperties.put("ui.defaultFont.antialiasing", FontDefaults.antialiasingHint);
++    }
++
++    @Override
++    protected RenderingHints getDesktopAAHints() {
++        // RenderingHints is mutable class, so we have to return new instance
++        // every time to be on the safe side:
++        return new RenderingHints(RenderingHints.KEY_TEXT_ANTIALIASING, FontDefaults.antialiasingHint);
      }
  
      /**
-Index: jdk8u45-b14/jdk/src/solaris/classes/sun/awt/X11/XWindow.java
+Index: jdk8u51-b16/jdk/src/solaris/classes/sun/awt/X11/XWindow.java
 ===================================================================
---- jdk8u45-b14.orig/jdk/src/solaris/classes/sun/awt/X11/XWindow.java
-+++ jdk8u45-b14/jdk/src/solaris/classes/sun/awt/X11/XWindow.java
+--- jdk8u51-b16.orig/jdk/src/solaris/classes/sun/awt/X11/XWindow.java
++++ jdk8u51-b16/jdk/src/solaris/classes/sun/awt/X11/XWindow.java
 @@ -104,7 +104,7 @@ class XWindow extends XBaseWindow implem
  
      static synchronized Font getDefaultFont() {
@@ -1613,10 +1620,10 @@ Index: jdk8u45-b14/jdk/src/solaris/classes/sun/awt/X11/XWindow.java
          }
          return defaultFont;
      }
-Index: jdk8u45-b14/jdk/src/solaris/classes/sun/awt/X11/FontDefaults.java
+Index: jdk8u51-b16/jdk/src/solaris/classes/sun/awt/X11/FontDefaults.java
 ===================================================================
 --- /dev/null
-+++ jdk8u45-b14/jdk/src/solaris/classes/sun/awt/X11/FontDefaults.java
++++ jdk8u51-b16/jdk/src/solaris/classes/sun/awt/X11/FontDefaults.java
 @@ -0,0 +1,174 @@
 +package sun.awt.X11;
 +
@@ -1792,3 +1799,118 @@ Index: jdk8u45-b14/jdk/src/solaris/classes/sun/awt/X11/FontDefaults.java
 +    }
 +
 +}
+Index: jdk8u51-b16/jdk/src/share/classes/sun/awt/SunToolkit.java
+===================================================================
+--- jdk8u51-b16.orig/jdk/src/share/classes/sun/awt/SunToolkit.java
++++ jdk8u51-b16/jdk/src/share/classes/sun/awt/SunToolkit.java
+@@ -1715,9 +1715,7 @@ public abstract class SunToolkit extends
+     }
+ 
+     private static boolean checkedSystemAAFontSettings;
+-    private static boolean useSystemAAFontSettings;
+     private static boolean lastExtraCondition = true;
+-    private static RenderingHints desktopFontHints;
+ 
+     /* Since Swing is the reason for this "extra condition" logic its
+      * worth documenting it in some detail.
+@@ -1761,72 +1759,6 @@ public abstract class SunToolkit extends
+         }
+     }
+ 
+-    /* "false", "off", ""default" aren't explicitly tested, they
+-     * just fall through to produce a null return which all are equated to
+-     * "false".
+-     */
+-    private static RenderingHints getDesktopAAHintsByName(String hintname) {
+-        Object aaHint = null;
+-        hintname = hintname.toLowerCase(Locale.ENGLISH);
+-        if (hintname.equals("on")) {
+-            aaHint = VALUE_TEXT_ANTIALIAS_ON;
+-        } else if (hintname.equals("gasp")) {
+-            aaHint = VALUE_TEXT_ANTIALIAS_GASP;
+-        } else if (hintname.equals("lcd") || hintname.equals("lcd_hrgb")) {
+-            aaHint = VALUE_TEXT_ANTIALIAS_LCD_HRGB;
+-        } else if (hintname.equals("lcd_hbgr")) {
+-            aaHint = VALUE_TEXT_ANTIALIAS_LCD_HBGR;
+-        } else if (hintname.equals("lcd_vrgb")) {
+-            aaHint = VALUE_TEXT_ANTIALIAS_LCD_VRGB;
+-        } else if (hintname.equals("lcd_vbgr")) {
+-            aaHint = VALUE_TEXT_ANTIALIAS_LCD_VBGR;
+-        }
+-        if (aaHint != null) {
+-            RenderingHints map = new RenderingHints(null);
+-            map.put(KEY_TEXT_ANTIALIASING, aaHint);
+-            return map;
+-        } else {
+-            return null;
+-        }
+-    }
+-
+-    /* This method determines whether to use the system font settings,
+-     * or ignore them if a L&F has specified they should be ignored, or
+-     * to override both of these with a system property specified value.
+-     * If the toolkit isn't a SunToolkit, (eg may be headless) then that
+-     * system property isn't applied as desktop properties are considered
+-     * to be inapplicable in that case. In that headless case although
+-     * this method will return "true" the toolkit will return a null map.
+-     */
+-    private static boolean useSystemAAFontSettings() {
+-        if (!checkedSystemAAFontSettings) {
+-            useSystemAAFontSettings = true; /* initially set this true */
+-            String systemAAFonts = null;
+-            Toolkit tk = Toolkit.getDefaultToolkit();
+-            if (tk instanceof SunToolkit) {
+-                systemAAFonts =
+-                    AccessController.doPrivileged(
+-                         new GetPropertyAction("awt.useSystemAAFontSettings"));
+-            }
+-            if (systemAAFonts != null) {
+-                useSystemAAFontSettings =
+-                    Boolean.valueOf(systemAAFonts).booleanValue();
+-                /* If it is anything other than "true", then it may be
+-                 * a hint name , or it may be "off, "default", etc.
+-                 */
+-                if (!useSystemAAFontSettings) {
+-                    desktopFontHints = getDesktopAAHintsByName(systemAAFonts);
+-                }
+-            }
+-            /* If its still true, apply the extra condition */
+-            if (useSystemAAFontSettings) {
+-                 useSystemAAFontSettings = lastExtraCondition;
+-            }
+-            checkedSystemAAFontSettings = true;
+-        }
+-        return useSystemAAFontSettings;
+-    }
+-
+     /* A variable defined for the convenience of JDK code */
+     public static final String DESKTOPFONTHINTS = "awt.font.desktophints";
+ 
+@@ -1842,22 +1774,12 @@ public abstract class SunToolkit extends
+      * to a helper class.
+      */
+     public static RenderingHints getDesktopFontHints() {
+-        if (useSystemAAFontSettings()) {
+-             Toolkit tk = Toolkit.getDefaultToolkit();
+-             if (tk instanceof SunToolkit) {
+-                 Object map = ((SunToolkit)tk).getDesktopAAHints();
+-                 return (RenderingHints)map;
+-             } else { /* Headless Toolkit */
+-                 return null;
+-             }
+-        } else if (desktopFontHints != null) {
+-            /* cloning not necessary as the return value is cloned later, but
+-             * its harmless.
+-             */
+-            return (RenderingHints)(desktopFontHints.clone());
+-        } else {
+-            return null;
++        Toolkit tk = Toolkit.getDefaultToolkit();
++        if (tk instanceof SunToolkit) {
++            Object map = ((SunToolkit) tk).getDesktopAAHints();
++            return (RenderingHints) map;
+         }
++        return null;
+     }
+ 
+ 

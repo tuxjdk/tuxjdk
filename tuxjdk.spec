@@ -1,11 +1,30 @@
-%global hgtag   jdk8u45-b14
-%global update  45
+#
+# spec file for package tuxjdk
+#
+# Copyright (c) 2015 Stanislav Baiduzhyi <baiduzhyi.devel@gmail.com>
+#
+# All modifications and additions to the file contributed by third parties
+# remain the property of their copyright owners, unless otherwise agreed
+# upon. The license for this file, and modifications and additions to the
+# file, is the same license as for the pristine package itself (unless the
+# license for the pristine package is not an Open Source License, in which
+# case the license is the MIT License). An "Open Source License" is a
+# license that conforms to the Open Source Definition (Version 1.9)
+# published by the Open Source Initiative.
+
+%global vendor  tuxjdk
+
+%global hgtag   jdk8u51-b16
+%global update  51
 %global minor   03
 
 # openjdk build system is different,
 # we are building release so there is no useful debuginfo,
 # so disabling debuginfo package creation:
 %global debug_package %{nil}
+# no one should touch our jars, we know better:
+%define __jar_repack %{nil}
+
 
 Name:           tuxjdk
 Version:        8.%{update}.%{minor}
@@ -42,6 +61,7 @@ BuildRequires:  quilt
 BuildRequires:  fdupes
 Source0:        %{name}-%{version}.tar.xz
 Source1:        %{hgtag}.tar.xz
+Source2:        launcher.sh
 Source13:       %{name}-rpmlintrc
 
 %description
@@ -78,38 +98,43 @@ popd
 # and probably for a good reason:
 export NO_BRP_STRIP_DEBUG='true'
 # creating main dir:
-install -dm 755 %{buildroot}/opt/%{name}
+install -dm 755 %{buildroot}/opt/%{vendor}/%{name}
 # processing the image:
 pushd %{hgtag}/build/images/j2sdk-image
 # deleting useless files:
 rm -rf 'demo' 'sample'
 # copy everything to /opt:
-cp -R * %{buildroot}/opt/%{name}/
+cp -R * %{buildroot}/opt/%{vendor}/%{name}/
 popd
 # hardlinks instead of duplicates:
-%fdupes %{buildroot}/opt/%{name}/
+%fdupes %{buildroot}/opt/%{vendor}/%{name}/
 # copy launchers to /usr/local/bin:
-install -Dm 755 launcher.sh %{buildroot}/usr/local/bin/java
-install -Dm 755 launcher.sh %{buildroot}/usr/local/bin/javac
-install -Dm 755 launcher.sh %{buildroot}/usr/local/bin/javap
-install -Dm 755 launcher.sh %{buildroot}/usr/local/bin/javah
+install -Dm 755 %{SOURCE2} %{buildroot}/usr/local/bin/java
+install -Dm 755 %{SOURCE2} %{buildroot}/usr/local/bin/javac
+install -Dm 755 %{SOURCE2} %{buildroot}/usr/local/bin/javap
+install -Dm 755 %{SOURCE2} %{buildroot}/usr/local/bin/javah
 # hadlink launchers as well:
 %fdupes %{buildroot}/usr/local/bin/
 # default font size and antialiasing mode:
 # TODO maybe find a better way to do that?
-cp default_swing.properties %{buildroot}/opt/%{name}/jre/lib/swing.properties
+cp default_swing.properties %{buildroot}/opt/%{vendor}/%{name}/jre/lib/swing.properties
 
 %files
 %defattr(644,root,root,755)
-/opt/%{name}
-%attr(755,root,root) /opt/%{name}/bin/*
-%attr(755,root,root) /opt/%{name}/jre/bin/*
+%dir /opt/%{vendor}
+/opt/%{vendor}/%{name}
+%attr(755,root,root) /opt/%{vendor}/%{name}/bin/*
+%attr(755,root,root) /opt/%{vendor}/%{name}/jre/bin/*
 
 %files launchers
 %defattr(755,root,root,755)
 /usr/local/bin/*
 
 %changelog
+* Wed Jul 15 2015 baiduzhyi.devel@gmail.com
+- Refreshing for 8u51.
+* Tue Jul 14 2015 - baiduzhyi.devel@gmail.com
+- Moving under vendor-specific dir.
 * Wed Jun 10 2015 baiduzhyi.devel@gmail.com
 - Version 03 of tuxjdk:
   * configurable default font size;
