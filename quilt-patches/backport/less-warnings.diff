@@ -1,17 +1,8 @@
-Index: jdk8u51-b16/common/autoconf/generated-configure.sh
+Index: jdk8u60/common/autoconf/generated-configure.sh
 ===================================================================
---- jdk8u51-b16.orig/common/autoconf/generated-configure.sh
-+++ jdk8u51-b16/common/autoconf/generated-configure.sh
-@@ -3872,7 +3872,7 @@ fi
- #CUSTOM_AUTOCONF_INCLUDE
- 
- # Do not change or remove the following line, it is needed for consistency checks:
--DATE_WHEN_GENERATED=1416326200
-+DATE_WHEN_GENERATED=1433940523
- 
- ###############################################################################
- #
-@@ -29799,7 +29799,7 @@ fi
+--- jdk8u60.orig/common/autoconf/generated-configure.sh
++++ jdk8u60/common/autoconf/generated-configure.sh
+@@ -29654,7 +29654,7 @@ fi
    #
    case $COMPILER_NAME in
      gcc )
@@ -20,11 +11,11 @@ Index: jdk8u51-b16/common/autoconf/generated-configure.sh
        -pipe \
        -D_GNU_SOURCE -D_REENTRANT -D_LARGEFILE64_SOURCE"
        case $OPENJDK_TARGET_CPU_ARCH in
-Index: jdk8u51-b16/common/autoconf/toolchain.m4
+Index: jdk8u60/common/autoconf/toolchain.m4
 ===================================================================
---- jdk8u51-b16.orig/common/autoconf/toolchain.m4
-+++ jdk8u51-b16/common/autoconf/toolchain.m4
-@@ -878,7 +878,7 @@ AC_DEFUN_ONCE([TOOLCHAIN_SETUP_COMPILER_
+--- jdk8u60.orig/common/autoconf/toolchain.m4
++++ jdk8u60/common/autoconf/toolchain.m4
+@@ -957,7 +957,7 @@ AC_DEFUN_ONCE([TOOLCHAIN_SETUP_COMPILER_
    #
    case $COMPILER_NAME in
      gcc )

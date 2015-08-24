@@ -47,8 +47,6 @@ Third number is the version of tuxjdk itself, padded with 0 to have a natural so
 # Patches list
 * **backport** contains patches that may be included in next version of openjdk or those that should but probably will not.
  * **compare-pointer-with-literal** fixes a mistake in C code, detected by OBS.
- * **gcc5-fix** fixes the memory leak when compiled with GCC 5.
- * **giflib5** adds support for giflib5.
  * **less-warnings** disable some most noisy warnings during the compilation.
  * **opensuse-link-zlib-as-needed** fixes the linking against system zlib.
 * **tune** contains patches to tune the openjdk default settings or distribution package.
@@ -61,7 +59,7 @@ Third number is the version of tuxjdk itself, padded with 0 to have a natural so
  * **configurable-ui-fonts** fixes the typographical point size (upstream openjdk completely ignores the 1/72" standard), adds a possibility to configure defaut font size (hardcoded to 12 in most locations and to 11 in some locations in upstream) and allows to specify desired default font antialiasing if the are any problems detecting one from system (upstream defaults behaviour is not well-defined, and needs constant attention from developers not to forget to set proper RenderingHints).
 
 # Planned features, tasks backlog
-## 8.51.04
+## 8.60.04
 * [x] change logic of 'awt.useSystemAAFontSettings'.
 * [ ] add possibility to specify antialiasing 'grayscale.'
 * [ ] change antialiasing 'on' to autodetect between grayscale and lcd.
