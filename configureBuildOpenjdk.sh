@@ -4,7 +4,9 @@ if [[ -n "$1" ]] ; then
   readonly BOOT_JDK="$1"
 else
   echo 'Boot jdk argument was not privded, trying to guess...'
-  if [ -x '/usr/lib/jvm/java/bin/javac' ] ; then
+  if [ -x '/opt/tuxjdk/tuxjdk/bin/javac' ] ; then
+    readonly BOOT_JDK='/opt/tuxjdk/tuxjdk'
+  elif [ -x '/usr/lib/jvm/java/bin/javac' ] ; then
     readonly BOOT_JDK='/usr/lib/jvm/java'
   elif [ -x '/usr/lib64/jvm/java/bin/javac' ] ; then
     readonly BOOT_JDK='/usr/lib64/jvm/java'
@@ -12,12 +14,13 @@ else
     echo 'Could not guess the bootjdk location, exiting.' >&2
     exit 1
   fi
+  echo "Using boot jdk: '$BOOT_JDK'"
 fi
 
 readonly MILESTONE='fcs'
 readonly USER_SUFFIX='tuxjdk'
 readonly PRODUCT_NAME='TuxJdk'
-readonly UPDATE_VERSION='51'
+readonly UPDATE_VERSION='60'
 readonly BUILD_NUMBER='03'
 
 unset JAVA_HOME

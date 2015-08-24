@@ -2,10 +2,8 @@ tuxjdk/change-vendor.diff
 tune/default-gc.diff
 tuxjdk/add-fontconfig-support.diff
 tuxjdk/configurable-ui-fonts.diff
-backport/giflib5.diff
 tune/full-srczip.diff
 tune/empty-ctsym.diff
 backport/opensuse-link-zlib-as-needed.diff
 backport/compare-pointer-with-literal.diff
-backport/gcc5-fix.diff
 backport/less-warnings.diff

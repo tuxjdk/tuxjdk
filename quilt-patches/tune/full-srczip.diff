@@ -1,8 +1,8 @@
-Index: jdk8u51-b16/jdk/make/CreateJars.gmk
+Index: jdk8u60/jdk/make/CreateJars.gmk
 ===================================================================
---- jdk8u51-b16.orig/jdk/make/CreateJars.gmk
-+++ jdk8u51-b16/jdk/make/CreateJars.gmk
-@@ -569,38 +569,12 @@ $(eval $(call SetupArchive,BUILD_CT_SYM,
+--- jdk8u60.orig/jdk/make/CreateJars.gmk
++++ jdk8u60/jdk/make/CreateJars.gmk
+@@ -580,38 +580,12 @@ $(eval $(call SetupArchive,BUILD_CT_SYM,
  ##########################################################################################
  
  SRC_ZIP_INCLUDES = \
