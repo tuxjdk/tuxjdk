@@ -1,7 +1,7 @@
-Index: jdk8u60/jdk/make/CompileLaunchers.gmk
+Index: jdk8u66-b17/jdk/make/CompileLaunchers.gmk
 ===================================================================
---- jdk8u60.orig/jdk/make/CompileLaunchers.gmk
-+++ jdk8u60/jdk/make/CompileLaunchers.gmk
+--- jdk8u66-b17.orig/jdk/make/CompileLaunchers.gmk
++++ jdk8u66-b17/jdk/make/CompileLaunchers.gmk
 @@ -427,7 +427,7 @@ endif
  # binary (at least on linux) which causes the size to differ between old and new build.
  ifeq ($(USE_EXTERNAL_LIBZ), true)
