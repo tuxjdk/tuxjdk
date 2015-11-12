@@ -26,5 +26,12 @@ sourceSetupEnv() {
 sourceSetupEnv
 
 echo "Applying quilt patches on current folder..."
-$QUILT push -a
-echo "Quilt patches applied."
+if $QUILT push -a
+then
+  echo ''
+  echo 'Quilt patches applied.'
+else
+  echo ''
+  echo -e '\e[91mQuilt patches application failed\e[0m'
+  exit 1
+fi

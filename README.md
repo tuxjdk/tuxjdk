@@ -16,7 +16,7 @@ To apply tuxjdk, do the following steps:
 # clone tuxjdk:
 git clone 'https://github.com/tuxjdk/tuxjdk.git'
 # clone openjdk:
-HGTAG='jdk8u51-b16'
+HGTAG='jdk8u66-b17'
 hg clone 'http://hg.openjdk.java.net/jdk8u/jdk8u' $HGTAG
 cd $HGTAG
 bash ./get_source.sh
@@ -59,7 +59,7 @@ Third number is the version of tuxjdk itself, padded with 0 to have a natural so
  * **configurable-ui-fonts** fixes the typographical point size (upstream openjdk completely ignores the 1/72" standard), adds a possibility to configure defaut font size (hardcoded to 12 in most locations and to 11 in some locations in upstream) and allows to specify desired default font antialiasing if the are any problems detecting one from system (upstream defaults behaviour is not well-defined, and needs constant attention from developers not to forget to set proper RenderingHints).
 
 # Planned features, tasks backlog
-## 8.60.04
+## 8.66.04
 * [x] change logic of 'awt.useSystemAAFontSettings'.
 * [ ] add possibility to specify antialiasing 'grayscale.'
 * [ ] change antialiasing 'on' to autodetect between grayscale and lcd.
