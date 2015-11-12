@@ -61,6 +61,10 @@ Third number is the version of tuxjdk itself, padded with 0 to have a natural so
 # Planned features, tasks backlog
 ## 8.66.04
 * [x] change logic of 'awt.useSystemAAFontSettings'.
+* [ ] get working cacerts file to make egit work with github.
+* [ ] fix the build of openjdk using statically-linked tuxjdk.
+
+## 8.66.05
 * [ ] add possibility to specify antialiasing 'grayscale.'
 * [ ] change antialiasing 'on' to autodetect between grayscale and lcd.
 * [ ] font size scaling: configure font size to 12 but render as 9, for badly-written apps like jedit.
