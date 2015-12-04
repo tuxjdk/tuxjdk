@@ -17,6 +17,7 @@
 %global hgtag   jdk8u66-b17
 %global update  66
 %global minor   03
+%global bootstrap tuxjdk-bootstrap-8.66.03
 
 # openjdk build system is different,
 # we are building release so there is no useful debuginfo,
@@ -56,18 +57,13 @@ BuildRequires:  libXi-devel
 BuildRequires:  libXinerama-devel
 BuildRequires:  libXt-devel
 BuildRequires:  libXtst-devel
-BuildRequires:  java-devel
-BuildRequires:  ca-certificates
-%if 0%{?is_opensuse}
-BuildRequires:  ca-certificates-mozilla
-BuildRequires:  ca-certificates-cacert
-%endif
 BuildRequires:  quilt
 BuildRequires:  fdupes
 Source0:        %{name}-%{version}.tar.xz
 Source1:        %{hgtag}.tar.xz
 Source2:        launcher.sh
 Source13:       %{name}-rpmlintrc
+Source99:       %{bootstrap}.tar.xz
 
 %description
 Enhanced Open Java Development Kit for developers on Linux. Contains series of
@@ -87,6 +83,7 @@ in path but not to conflict with existing jpackage-based packages.
 %prep
 %setup -q
 %setup -q -T -D -a 1
+%setup -q -T -D -a 99
 ( cd %{hgtag}/jdk/src/share/native/sun/awt && rm -rf giflib )
 ( cd %{hgtag}/jdk/src/share/native/java/util/zip && rm -rf zlib-1.2.8 )
 ( cd %{hgtag} && bash ../applyTuxjdk.sh )
@@ -94,7 +91,7 @@ in path but not to conflict with existing jpackage-based packages.
 %build
 pushd %{hgtag}
 bash ./common/autoconf/autogen.sh
-bash ../configureBuildOpenjdk.sh
+bash ../configureBuildOpenjdk.sh "$(readlink -e ../%{bootstrap})"
 popd
 
 %install
@@ -123,15 +120,6 @@ install -Dm 755 %{SOURCE2} %{buildroot}/usr/local/bin/javah
 # default font size and antialiasing mode:
 # TODO maybe find a better way to do that?
 cp default_swing.properties %{buildroot}/opt/%{vendor}/%{name}/jre/lib/swing.properties
-# copy the certificates:
-if [ -f '/var/lib/ca-certificates/java-cacerts' ] ; then
-  cp -f '/var/lib/ca-certificates/java-cacerts' %{buildroot}/opt/%{vendor}/%{name}/jre/lib/security/cacerts
-elif readlink -e '/etc/pki/java/cacerts' ; then
-  cp -f "$( readlink -e '/etc/pki/java/cacerts' )" %{buildroot}/opt/%{vendor}/%{name}/jre/lib/security/cacerts
-else
-  echo 'No cacerts found!' >&2
-  exit 1
-fi
 
 %files
 %defattr(644,root,root,755)
