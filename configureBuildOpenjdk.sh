@@ -4,7 +4,9 @@ if [[ -n "$1" ]] ; then
   readonly BOOT_JDK="$1"
 else
   echo 'Boot jdk argument was not privded, trying to guess...'
-  if [ -x '/opt/tuxjdk/tuxjdk/bin/javac' ] ; then
+  if [ -x '/opt/jdk/bin/javac' ] ; then
+    readonly BOOT_JDK='/opt/jdk'
+  elif [ -x '/opt/tuxjdk/tuxjdk/bin/javac' ] ; then
     readonly BOOT_JDK='/opt/tuxjdk/tuxjdk'
   elif [ -x '/usr/lib/jvm/java/bin/javac' ] ; then
     readonly BOOT_JDK='/usr/lib/jvm/java'

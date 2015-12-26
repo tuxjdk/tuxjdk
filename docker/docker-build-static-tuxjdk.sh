@@ -1,9 +1,17 @@
 #!/bin/bash
 
+set -x
 set -e
 set -o pipefail
 
-readonly BOOT_JDK='/usr/lib64/jvm/java'
+if [ -x '/opt/jdk/bin/javac' ] ; then
+  readonly BOOT_JDK='/opt/jdk'
+elif [ -x '/usr/lib64/jvm/java/bin/javac' ] ; then
+  readonly BOOT_JDK='/usr/lib64/jvm/java'
+else
+  echo 'No boot jdk found' >&2
+  exit 1
+fi
 
 readonly MILESTONE='fcs'
 readonly USER_SUFFIX='tuxjdk'
