@@ -57,6 +57,11 @@ BuildRequires:  libXinerama-devel
 BuildRequires:  libXt-devel
 BuildRequires:  libXtst-devel
 BuildRequires:  java-devel
+BuildRequires:  ca-certificates
+%if 0%{?is_opensuse}
+BuildRequires:  ca-certificates-mozilla
+BuildRequires:  ca-certificates-cacert
+%endif
 BuildRequires:  quilt
 BuildRequires:  fdupes
 Source0:        %{name}-%{version}.tar.xz
@@ -118,6 +123,15 @@ install -Dm 755 %{SOURCE2} %{buildroot}/usr/local/bin/javah
 # default font size and antialiasing mode:
 # TODO maybe find a better way to do that?
 cp default_swing.properties %{buildroot}/opt/%{vendor}/%{name}/jre/lib/swing.properties
+# copy the certificates:
+if [ -f '/var/lib/ca-certificates/java-cacerts' ] ; then
+  cp -f '/var/lib/ca-certificates/java-cacerts' %{buildroot}/opt/%{vendor}/%{name}/jre/lib/security/cacerts
+elif readlink -e '/etc/pki/java/cacerts' ; then
+  cp -f "$( readlink -e '/etc/pki/java/cacerts' )" %{buildroot}/opt/%{vendor}/%{name}/jre/lib/security/cacerts
+else
+  echo 'No cacerts found!' >&2
+  exit 1
+fi
 
 %files
 %defattr(644,root,root,755)
