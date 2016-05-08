@@ -1,7 +1,7 @@
-Index: jdk8u66-b17/jdk/src/solaris/native/sun/awt/awt_Font.c
+Index: jdk8u92-b14/jdk/src/solaris/native/sun/awt/awt_Font.c
 ===================================================================
---- jdk8u66-b17.orig/jdk/src/solaris/native/sun/awt/awt_Font.c
-+++ jdk8u66-b17/jdk/src/solaris/native/sun/awt/awt_Font.c
+--- jdk8u92-b14.orig/jdk/src/solaris/native/sun/awt/awt_Font.c
++++ jdk8u92-b14/jdk/src/solaris/native/sun/awt/awt_Font.c
 @@ -502,7 +502,7 @@ awtJNI_GetFontData(JNIEnv * env, jobject
              jio_snprintf(fdata->flist[i].xlfd, strlen(nativename) + 10,
                           nativename, size * 10);

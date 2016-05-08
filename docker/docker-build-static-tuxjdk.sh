@@ -16,7 +16,7 @@ fi
 readonly MILESTONE='fcs'
 readonly USER_SUFFIX='tuxjdk'
 readonly PRODUCT_NAME='TuxJdk'
-readonly UPDATE_VERSION='66'
+readonly UPDATE_VERSION='92'
 readonly BUILD_NUMBER='03'
 
 unset JAVA_HOME

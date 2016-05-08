@@ -1,7 +1,7 @@
-Index: jdk8u66-b17/jdk/make/CreateJars.gmk
+Index: jdk8u92-b14/jdk/make/CreateJars.gmk
 ===================================================================
---- jdk8u66-b17.orig/jdk/make/CreateJars.gmk
-+++ jdk8u66-b17/jdk/make/CreateJars.gmk
+--- jdk8u92-b14.orig/jdk/make/CreateJars.gmk
++++ jdk8u92-b14/jdk/make/CreateJars.gmk
 @@ -556,26 +556,7 @@ EXCLUDE_PROPWARN_PKGS = com.sun.java.swi
  EXPORTED_PRIVATE_PKGS = com.oracle.net \
      com.oracle.nio
