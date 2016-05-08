@@ -1,7 +1,7 @@
-Index: jdk8u66-b17/jdk/src/share/native/java/lang/System.c
+Index: jdk8u92-b14/jdk/src/share/native/java/lang/System.c
 ===================================================================
---- jdk8u66-b17.orig/jdk/src/share/native/java/lang/System.c
-+++ jdk8u66-b17/jdk/src/share/native/java/lang/System.c
+--- jdk8u92-b14.orig/jdk/src/share/native/java/lang/System.c
++++ jdk8u92-b14/jdk/src/share/native/java/lang/System.c
 @@ -97,9 +97,9 @@ Java_java_lang_System_identityHashCode(J
      } else ((void) 0)
  

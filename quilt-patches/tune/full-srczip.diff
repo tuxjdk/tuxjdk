@@ -1,7 +1,7 @@
-Index: jdk8u66-b17/jdk/make/CreateJars.gmk
+Index: jdk8u92-b14/jdk/make/CreateJars.gmk
 ===================================================================
---- jdk8u66-b17.orig/jdk/make/CreateJars.gmk
-+++ jdk8u66-b17/jdk/make/CreateJars.gmk
+--- jdk8u92-b14.orig/jdk/make/CreateJars.gmk
++++ jdk8u92-b14/jdk/make/CreateJars.gmk
 @@ -580,38 +580,12 @@ $(eval $(call SetupArchive,BUILD_CT_SYM,
  ##########################################################################################
  

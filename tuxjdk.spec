@@ -14,8 +14,8 @@
 
 %global vendor  tuxjdk
 
-%global hgtag   jdk8u66-b17
-%global update  66
+%global hgtag   jdk8u92-b14
+%global update  92
 %global minor   03
 
 # openjdk build system is different,
@@ -145,6 +145,10 @@ fi
 /usr/local/bin/*
 
 %changelog
+* Sun May  8 2016 baiduzhyi.devel@gmail.com
+- Refreshing for 8u92.
+* Sun Nov 15 2015 baiduzhyi.devel@gmail.com
+- Adding cacert from the distribution.
 * Thu Nov 12 2015 baiduzhyi.devel@gmail.com
 - Refreshing for 8u66.
 * Fri Aug 21 2015 baiduzhyi.devel@gmail.com

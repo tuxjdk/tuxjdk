@@ -1,8 +1,8 @@
-Index: jdk8u66-b17/common/autoconf/generated-configure.sh
+Index: jdk8u92-b14/common/autoconf/generated-configure.sh
 ===================================================================
---- jdk8u66-b17.orig/common/autoconf/generated-configure.sh
-+++ jdk8u66-b17/common/autoconf/generated-configure.sh
-@@ -29654,7 +29654,7 @@ fi
+--- jdk8u92-b14.orig/common/autoconf/generated-configure.sh
++++ jdk8u92-b14/common/autoconf/generated-configure.sh
+@@ -29667,7 +29667,7 @@ fi
    #
    case $COMPILER_NAME in
      gcc )
@@ -11,10 +11,10 @@ Index: jdk8u66-b17/common/autoconf/generated-configure.sh
        -pipe \
        -D_GNU_SOURCE -D_REENTRANT -D_LARGEFILE64_SOURCE"
        case $OPENJDK_TARGET_CPU_ARCH in
-Index: jdk8u66-b17/common/autoconf/toolchain.m4
+Index: jdk8u92-b14/common/autoconf/toolchain.m4
 ===================================================================
---- jdk8u66-b17.orig/common/autoconf/toolchain.m4
-+++ jdk8u66-b17/common/autoconf/toolchain.m4
+--- jdk8u92-b14.orig/common/autoconf/toolchain.m4
++++ jdk8u92-b14/common/autoconf/toolchain.m4
 @@ -957,7 +957,7 @@ AC_DEFUN_ONCE([TOOLCHAIN_SETUP_COMPILER_
    #
    case $COMPILER_NAME in
