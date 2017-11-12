@@ -14,8 +14,8 @@
 
 %global vendor  tuxjdk
 
-%global hgtag   jdk8u92-b14
-%global update  92
+%global hgtag   jdk8u152-b16
+%global update  152
 %global minor   03
 
 # openjdk build system is different,
@@ -145,6 +145,8 @@ fi
 /usr/local/bin/*
 
 %changelog
+* Sun Nov 12 2017 sam@guymer.me
+- Refreshing for 8u152.
 * Sun May  8 2016 baiduzhyi.devel@gmail.com
 - Refreshing for 8u92.
 * Sun Nov 15 2015 baiduzhyi.devel@gmail.com

@@ -12,7 +12,7 @@ VOLUME /tmp
 # tuxjdk dependencies:
 RUN zypper --non-interactive --gpg-auto-import-keys update --no-recommends && \
     zypper --non-interactive --gpg-auto-import-keys install --no-recommends \
-    bash which sed xz make gcc5 gcc5-c++ autoconf automake time tar zip unzip \
+    bash which sed xz make gcc gcc-c++ autoconf automake time tar zip unzip \
     freetype2-devel fontconfig-devel alsa-devel cups-devel gtk2-devel libX11-devel \
     libXi-devel libXinerama-devel libXt-devel libXtst-devel site-config \
     ca-certificates ca-certificates-mozilla ca-certificates-cacert quilt fdupes \
@@ -23,7 +23,7 @@ RUN zypper --non-interactive --gpg-auto-import-keys update --no-recommends && \
 
 ## Setup user environment. Replace 1000 with your user / group id.
 RUN \
-  export uid=1024 gid=1024 && \
+  export uid=1000 gid=1000 && \
   groupadd --gid ${gid} builder && \
   useradd --uid ${uid} --gid ${gid} --create-home builder && \
   mkdir /tuxjdk && \

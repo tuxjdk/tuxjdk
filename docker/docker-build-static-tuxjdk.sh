@@ -16,7 +16,7 @@ fi
 readonly MILESTONE='fcs'
 readonly USER_SUFFIX='tuxjdk'
 readonly PRODUCT_NAME='TuxJdk'
-readonly UPDATE_VERSION='92'
+readonly UPDATE_VERSION='152'
 readonly BUILD_NUMBER='03'
 
 unset JAVA_HOME
@@ -42,13 +42,6 @@ rm -rf build && mkdir build && cd build
 (
   mkdir building
   cd building
-  ## using gcc5 from Leap 42.1:
-  export CC=gcc-5
-  export CXX=g++-5
-  ## jdk8u45 still does not support linux 4.0 officially,
-  ## so we have to disable os version check because
-  ## tumbleweed already has 4.0-based kernel:
-  export DISABLE_HOTSPOT_OS_VERSION_CHECK=ok
   bash /tuxjdk/build/jdk/configure \
     --disable-debug-symbols \
     --disable-zip-debug-info \

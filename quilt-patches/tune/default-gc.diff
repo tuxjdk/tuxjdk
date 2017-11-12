@@ -1,8 +1,8 @@
-Index: jdk8u92-b14/hotspot/src/share/vm/runtime/arguments.cpp
+Index: jdk8u152-b16/hotspot/src/share/vm/runtime/arguments.cpp
 ===================================================================
---- jdk8u92-b14.orig/hotspot/src/share/vm/runtime/arguments.cpp
-+++ jdk8u92-b14/hotspot/src/share/vm/runtime/arguments.cpp
-@@ -1568,11 +1568,7 @@ void Arguments::set_conservative_max_hea
+--- jdk8u152-b16.orig/hotspot/src/share/vm/runtime/arguments.cpp
++++ jdk8u152-b16/hotspot/src/share/vm/runtime/arguments.cpp
+@@ -1572,11 +1572,7 @@ void Arguments::set_conservative_max_hea
  
  void Arguments::select_gc_ergonomically() {
    if (os::is_server_class_machine()) {
